@@ -282,6 +282,8 @@ We constructed our dataset through systematic collection and manual annotation f
 
 The final dataset contains: \textbf{Depressed}: 10,325 samples; \textbf{Normal}: 22,245 samples (unbalanced), with a balanced version created by random sampling. Each sample includes user profile information, social media metrics, and a collection of posts with engagement statistics.
 
+\textbf{Data Availability}: The complete dataset, including both balanced and unbalanced versions, processed embeddings, and all analysis code, is publicly available. The raw dataset files (depressed.json and normal.json) and processed embeddings can be downloaded from Google Drive: \url{https://drive.google.com/drive/folders/1w3JKnouiu-FNb2Qmk_QmMlcsFGuoVg-o?usp=sharing}. All code, including data processing scripts, EDA analysis, and embedding generation, is available on GitHub: \url{https://github.com/EaminC/Math4ML/}.
+
 \subsection{Data Collection Pipeline}
 
 Our data collection process consists of two main components: (1) a web crawler that systematically collects user information and posts from Weibo, and (2) a custom labeling interface that enables trained annotators to evaluate users across multiple dimensions.
@@ -482,6 +484,8 @@ We report comprehensive metrics to assess model performance: F1-score, Precision
 \section{Expected Contributions}
 
 This project demonstrates fundamental ML techniques (PCA, gradient descent, regularization) applied to mental health detection, addressing distribution drift and class imbalance. We aim to identify the most effective text representation and classification methods for depression detection in social media data, with insights from comprehensive exploratory data analysis.
+
+\textbf{Reproducibility}: To facilitate reproducibility and further research, we provide complete code and data access. All implementation code, including data preprocessing, vectorization methods, PCA implementation, and evaluation scripts, is available on GitHub: \url{https://github.com/EaminC/Math4ML/}. The dataset and processed embeddings are available on Google Drive: \url{https://drive.google.com/drive/folders/1w3JKnouiu-FNb2Qmk_QmMlcsFGuoVg-o?usp=sharing}.
 
 \bibliography{references}
 \bibliographystyle{plainnat}
