@@ -6,7 +6,7 @@
 
 
 % ready for submission
-\usepackage{neurips_2024}
+\usepackage[final]{neurips_2024}
 
 
 % to compile a preprint version, e.g., for submission to arXiv, add add the
@@ -86,19 +86,19 @@ To address this, we created a balanced dataset using random undersampling. Speci
 The class distribution analysis reveals the inherent imbalance in social media depression detection tasks. Table~\ref{tab:dataset_stats} summarizes the dataset statistics for both unbalanced and balanced versions. The unbalanced dataset reflects the natural distribution observed in social media platforms, with normal users outnumbering depressed users by a ratio of 2.15:1. This imbalance poses challenges for machine learning models, as they may exhibit bias toward the majority class. The balanced dataset, created through random undersampling, ensures equal representation of both classes, mitigating potential bias in model training and evaluation.
 
 \begin{table}[ht]
-\centering
+  \centering
 \caption{Dataset statistics for unbalanced and balanced versions.}
 \label{tab:dataset_stats}
 \begin{tabular}{lcc}
-\toprule
+    \toprule
 Metric & Unbalanced & Balanced \\
-\midrule
+    \midrule
 Total Users & 32,570 & 20,650 \\
 Depressed Users & 10,325 (31.7\%) & 10,325 (50.0\%) \\
 Normal Users & 22,245 (68.3\%) & 10,325 (50.0\%) \\
 Class Ratio & 1:2.15 & 1:1 \\
-\bottomrule
-\end{tabular}
+    \bottomrule
+  \end{tabular}
 \end{table}
 
 Figure~\ref{fig:class_dist_balanced} visualizes the balanced class distribution, demonstrating the equal representation achieved through random undersampling. For comparison, Figure~\ref{fig:class_dist_unbalanced} shows the original unbalanced distribution. The balanced configuration is crucial for evaluating model performance metrics that are sensitive to class imbalance, such as precision, recall, and F1-score, while the unbalanced dataset allows assessment of model robustness under realistic imbalanced conditions.
@@ -315,7 +315,7 @@ The labeling system employs a 10-dimension evaluation framework based on clinica
     \item \textbf{Suicidal Ideation}: Mentions of death, suicidal thoughts, self-harm behavior
     \item \textbf{Social Withdrawal}: Reduced social activities, avoiding others, small social network
     \item \textbf{Somatic Symptoms}: Headaches, stomach pain, chest tightness without organic causes
-\end{enumerate}
+        \end{enumerate}
 
 For each dimension, annotators select either "positive" (indicating presence of the symptom) or "negative" (indicating absence). The final label is determined by a majority rule: if 5 or more dimensions are marked as positive, the user is labeled as "depressed" (label=1); otherwise, the user is labeled as "normal" (label=0). This approach ensures consistent labeling criteria while allowing for nuanced evaluation across multiple depression indicators.
 
@@ -364,11 +364,11 @@ N-grams capture local word dependencies and sequential patterns in text by consi
 \end{equation}
 
 For a document $d$ with word sequence $(w_1, w_2, \ldots, w_m)$, we extract:
-\begin{itemize}
+    \begin{itemize}
     \item \textbf{Unigrams}: $(w_1), (w_2), \ldots, (w_m)$
     \item \textbf{Bigrams}: $(w_1, w_2), (w_2, w_3), \ldots, (w_{m-1}, w_m)$
     \item \textbf{Trigrams}: $(w_1, w_2, w_3), (w_2, w_3, w_4), \ldots, (w_{m-2}, w_{m-1}, w_m)$
-\end{itemize}
+    \end{itemize}
 
 We use CountVectorizer with the same feature constraints as TF-IDF (max features: 5,000, min document frequency: 2, max document frequency: 95\%) to create a bag-of-n-grams representation. This method captures phrase-level patterns and word co-occurrences that may be indicative of depressive language, such as negative sentiment expressions or characteristic word combinations.
 
