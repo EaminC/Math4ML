@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.5)  18 NOV 2025 13:46
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.5)  18 NOV 2025 13:57
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -598,16 +598,13 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             `cmtt' (encoding: T1).
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
  [1
 
 
 {/usr/local/texlive/2024/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/usr/loc
 al/texlive/2024/texmf-dist/fonts/enc/dvips/base/8r.enc}{/usr/local/texlive/2024
 /texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}]
-<../eda/figures_unbalanced/01_class_distribution.png, id=149, 714.9912pt x 425.
+<../eda/figures_unbalanced/01_class_distribution.png, id=153, 714.9912pt x 425.
 9112pt>
 File: ../eda/figures_unbalanced/01_class_distribution.png Graphic file (type pn
 g)
@@ -615,7 +612,7 @@ g)
 Package pdftex.def Info: ../eda/figures_unbalanced/01_class_distribution.png  u
 sed on input line 110.
 (pdftex.def)             Requested size: 190.79109pt x 113.65228pt.
-<../eda/figures_balanced/01_class_distribution.png, id=151, 714.9912pt x 425.91
+<../eda/figures_balanced/01_class_distribution.png, id=155, 714.9912pt x 425.91
 12pt>
 File: ../eda/figures_balanced/01_class_distribution.png Graphic file (type png)
 
@@ -623,12 +620,7 @@ File: ../eda/figures_balanced/01_class_distribution.png Graphic file (type png)
 Package pdftex.def Info: ../eda/figures_balanced/01_class_distribution.png  use
 d on input line 117.
 (pdftex.def)             Requested size: 190.79109pt x 113.65228pt.
-
-Underfull \vbox (badness 1360) has occurred while \output is active []
-
- [2 <../eda/figures_unbalanced/01_class_distribution.png> <../eda/figures_balan
-ced/01_class_distribution.png>]
-<../eda/figures_unbalanced/02_gender_distribution.png, id=161, 454.8192pt x 339
+<../eda/figures_unbalanced/02_gender_distribution.png, id=157, 454.8192pt x 339
 .1872pt>
 File: ../eda/figures_unbalanced/02_gender_distribution.png Graphic file (type p
 ng)
@@ -636,7 +628,7 @@ ng)
 Package pdftex.def Info: ../eda/figures_unbalanced/02_gender_distribution.png  
 used on input line 135.
 (pdftex.def)             Requested size: 190.79109pt x 142.28168pt.
-<../eda/figures_balanced/02_gender_distribution.png, id=162, 454.8192pt x 339.1
+<../eda/figures_balanced/02_gender_distribution.png, id=158, 454.8192pt x 339.1
 872pt>
 File: ../eda/figures_balanced/02_gender_distribution.png Graphic file (type png
 )
@@ -644,7 +636,8 @@ File: ../eda/figures_balanced/02_gender_distribution.png Graphic file (type png
 Package pdftex.def Info: ../eda/figures_balanced/02_gender_distribution.png  us
 ed on input line 141.
 (pdftex.def)             Requested size: 190.79109pt x 142.28168pt.
-<../eda/figures_unbalanced/03_age_distribution.png, id=164, 859.5312pt x 426.15
+ [2]
+<../eda/figures_unbalanced/03_age_distribution.png, id=169, 859.5312pt x 426.15
 21pt>
 File: ../eda/figures_unbalanced/03_age_distribution.png Graphic file (type png)
 
@@ -652,16 +645,17 @@ File: ../eda/figures_unbalanced/03_age_distribution.png Graphic file (type png)
 Package pdftex.def Info: ../eda/figures_unbalanced/03_age_distribution.png  use
 d on input line 158.
 (pdftex.def)             Requested size: 190.79109pt x 94.59258pt.
-<../eda/figures_balanced/03_age_distribution.png, id=165, 859.5312pt x 426.1521
+<../eda/figures_balanced/03_age_distribution.png, id=170, 859.5312pt x 426.1521
 pt>
 File: ../eda/figures_balanced/03_age_distribution.png Graphic file (type png)
 <use ../eda/figures_balanced/03_age_distribution.png>
 Package pdftex.def Info: ../eda/figures_balanced/03_age_distribution.png  used 
 on input line 164.
 (pdftex.def)             Requested size: 190.79109pt x 94.59258pt.
- [3 <../eda/figures_unbalanced/02_gender_distribution.png> <../eda/figures_bala
-nced/02_gender_distribution.png>]
-<../eda/figures_unbalanced/04_social_metrics_comparison.png, id=179, 1076.3412p
+ [3 <../eda/figures_unbalanced/01_class_distribution.png> <../eda/figures_balan
+ced/01_class_distribution.png> <../eda/figures_unbalanced/02_gender_distributio
+n.png> <../eda/figures_balanced/02_gender_distribution.png>]
+<../eda/figures_unbalanced/04_social_metrics_comparison.png, id=184, 1076.3412p
 t x 866.2764pt>
 File: ../eda/figures_unbalanced/04_social_metrics_comparison.png Graphic file (
 type png)
@@ -669,7 +663,7 @@ type png)
 Package pdftex.def Info: ../eda/figures_unbalanced/04_social_metrics_comparison
 .png  used on input line 183.
 (pdftex.def)             Requested size: 190.79109pt x 153.54373pt.
-<../eda/figures_balanced/04_social_metrics_comparison.png, id=180, 1076.3412pt 
+<../eda/figures_balanced/04_social_metrics_comparison.png, id=185, 1076.3412pt 
 x 866.2764pt>
 File: ../eda/figures_balanced/04_social_metrics_comparison.png Graphic file (ty
 pe png)
@@ -680,7 +674,7 @@ ng  used on input line 189.
  [4 <../eda/figures_unbalanced/03_age_distribution.png> <../eda/figures_balance
 d/03_age_distribution.png> <../eda/figures_unbalanced/04_social_metrics_compari
 son.png> <../eda/figures_balanced/04_social_metrics_comparison.png>]
-<../eda/figures_unbalanced/05_engagement_metrics.png, id=192, 1076.3412pt x 866
+<../eda/figures_unbalanced/05_engagement_metrics.png, id=196, 1076.3412pt x 866
 .2764pt>
 File: ../eda/figures_unbalanced/05_engagement_metrics.png Graphic file (type pn
 g)
@@ -688,7 +682,7 @@ g)
 Package pdftex.def Info: ../eda/figures_unbalanced/05_engagement_metrics.png  u
 sed on input line 208.
 (pdftex.def)             Requested size: 190.79109pt x 153.54373pt.
-<../eda/figures_balanced/05_engagement_metrics.png, id=193, 1076.3412pt x 866.2
+<../eda/figures_balanced/05_engagement_metrics.png, id=197, 1076.3412pt x 866.2
 764pt>
 File: ../eda/figures_balanced/05_engagement_metrics.png Graphic file (type png)
 
@@ -696,7 +690,7 @@ File: ../eda/figures_balanced/05_engagement_metrics.png Graphic file (type png)
 Package pdftex.def Info: ../eda/figures_balanced/05_engagement_metrics.png  use
 d on input line 214.
 (pdftex.def)             Requested size: 190.79109pt x 153.54373pt.
-<../eda/figures_unbalanced/06_correlation_heatmap.png, id=195, 781.7205pt x 715
+<../eda/figures_unbalanced/06_correlation_heatmap.png, id=199, 781.7205pt x 715
 .473pt>
 File: ../eda/figures_unbalanced/06_correlation_heatmap.png Graphic file (type p
 ng)
@@ -704,7 +698,7 @@ ng)
 Package pdftex.def Info: ../eda/figures_unbalanced/06_correlation_heatmap.png  
 used on input line 233.
 (pdftex.def)             Requested size: 190.79109pt x 174.621pt.
-<../eda/figures_balanced/06_correlation_heatmap.png, id=196, 781.7205pt x 715.4
+<../eda/figures_balanced/06_correlation_heatmap.png, id=200, 781.7205pt x 715.4
 73pt>
 File: ../eda/figures_balanced/06_correlation_heatmap.png Graphic file (type png
 )
@@ -712,14 +706,15 @@ File: ../eda/figures_balanced/06_correlation_heatmap.png Graphic file (type png
 Package pdftex.def Info: ../eda/figures_balanced/06_correlation_heatmap.png  us
 ed on input line 239.
 (pdftex.def)             Requested size: 190.79109pt x 174.621pt.
+ [5 <../eda/figures_unbalanced/05_engagement_metrics.png> <../eda/figures_balan
+ced/05_engagement_metrics.png>]
 LaTeX Font Info:    Trying to load font information for TS1+ptm on input line 2
 51.
 
 (/usr/local/texlive/2024/texmf-dist/tex/latex/psnfss/ts1ptm.fd
 File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
-) [5 <../eda/figures_unbalanced/05_engagement_metrics.png> <../eda/figures_bala
-nced/05_engagement_metrics.png>]
-<../eda/figures_unbalanced/07_feature_comparison.png, id=206, 1004.0712pt x 570
+)
+<../eda/figures_unbalanced/07_feature_comparison.png, id=210, 1004.0712pt x 570
 .4512pt>
 File: ../eda/figures_unbalanced/07_feature_comparison.png Graphic file (type pn
 g)
@@ -727,7 +722,7 @@ g)
 Package pdftex.def Info: ../eda/figures_unbalanced/07_feature_comparison.png  u
 sed on input line 266.
 (pdftex.def)             Requested size: 190.79109pt x 108.39555pt.
-<../eda/figures_balanced/07_feature_comparison.png, id=207, 1004.0712pt x 570.4
+<../eda/figures_balanced/07_feature_comparison.png, id=211, 1004.0712pt x 570.4
 512pt>
 File: ../eda/figures_balanced/07_feature_comparison.png Graphic file (type png)
 
@@ -736,25 +731,32 @@ Package pdftex.def Info: ../eda/figures_balanced/07_feature_comparison.png  use
 d on input line 272.
 (pdftex.def)             Requested size: 190.79109pt x 108.39555pt.
  [6 <../eda/figures_unbalanced/06_correlation_heatmap.png> <../eda/figures_bala
-nced/06_correlation_heatmap.png>] [7 <../eda/figures_unbalanced/07_feature_comp
-arison.png> <../eda/figures_balanced/07_feature_comparison.png>]
+nced/06_correlation_heatmap.png>]
+Underfull \hbox (badness 1226) in paragraph at lines 285--286
+\T1/cmtt/m/n/10 google . com / drive / folders / 1w3JKnouiu-[]FNb2Qmk _ QmMlcsF
+GuoVg-[]o ? usp = sharing$[]\T1/ptm/m/n/10 (+20) . All
+ []
+
+[7 <../eda/figures_unbalanced/07_feature_comparison.png> <../eda/figures_balanc
+ed/07_feature_comparison.png>]
 <labeling_main.png, id=230, 1512.65125pt x 773.89125pt>
 File: labeling_main.png Graphic file (type png)
 <use labeling_main.png>
-Package pdftex.def Info: labeling_main.png  used on input line 326.
+Package pdftex.def Info: labeling_main.png  used on input line 328.
 (pdftex.def)             Requested size: 357.73405pt x 183.02171pt.
 <labeling_dimensions.png, id=232, 1517.67pt x 838.13126pt>
 File: labeling_dimensions.png Graphic file (type png)
 <use labeling_dimensions.png>
-Package pdftex.def Info: labeling_dimensions.png  used on input line 335.
+Package pdftex.def Info: labeling_dimensions.png  used on input line 337.
 (pdftex.def)             Requested size: 357.73405pt x 197.54915pt.
-[8 <./labeling_main.png>] [9 <./labeling_dimensions.png>] [10]
-<figures/scree_plot.png, id=283, 1004.3121pt x 715.2321pt>
+ [8 <./labeling_main.png>] [9 <./labeling_dimensions.png>] [10]
+<figures/scree_plot.png, id=287, 1004.3121pt x 715.2321pt>
 File: figures/scree_plot.png Graphic file (type png)
 <use figures/scree_plot.png>
-Package pdftex.def Info: figures/scree_plot.png  used on input line 431.
+Package pdftex.def Info: figures/scree_plot.png  used on input line 433.
 (pdftex.def)             Requested size: 357.73405pt x 254.76588pt.
- [11 <./figures/scree_plot.png>] (./final.bbl [12]) [13] [14] (./final.aux)
+ [11] [12 <./figures/scree_plot.png>] (./final.bbl) [13] [14]
+(./final.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-02-20>
@@ -763,13 +765,13 @@ Package rerunfilecheck Info: File `final.out' has not changed.
 (rerunfilecheck)             Checksum: 37B0A3154D8C35C728151066F245D1F9;5192.
  ) 
 Here is how much of TeX's memory you used:
- 14981 strings out of 474116
- 243465 string characters out of 5743682
- 1938187 words of memory out of 5000000
+ 14985 strings out of 474116
+ 243501 string characters out of 5743682
+ 1940187 words of memory out of 5000000
  36813 multiletter control sequences out of 15000+600000
- 595099 words of font info for 206 fonts, out of 8000000 for 9000
+ 595289 words of font info for 209 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,10n,79p,1047b,571s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,10n,79p,1114b,552s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 ></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx7.pfb><
 /usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></
@@ -785,10 +787,10 @@ live/2024/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local
 exlive/2024/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/202
 4/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2024/texmf-di
 st/fonts/type1/urw/times/utmri8a.pfb>
-Output written on final.pdf (14 pages, 4175523 bytes).
+Output written on final.pdf (14 pages, 4181500 bytes).
 PDF statistics:
- 423 PDF objects out of 1000 (max. 8388607)
- 339 compressed objects within 4 object streams
+ 434 PDF objects out of 1000 (max. 8388607)
+ 350 compressed objects within 4 object streams
  103 named destinations out of 1000 (max. 500000)
  40774 words of extra memory for PDF output out of 42996 (max. 10000000)
 
