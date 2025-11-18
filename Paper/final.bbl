@@ -1,0 +1,69 @@
+\begin{thebibliography}{12}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Bottou(2010)]{bottou2010}
+L{\'e}on Bottou.
+\newblock Large-scale machine learning with stochastic gradient descent.
+\newblock In \emph{Proceedings of COMPSTAT'2010}, pages 177--186. Physica-Verlag HD, 2010.
+
+\bibitem[Chawla et~al.(2002)Chawla, Bowyer, Hall, and Kegelmeyer]{chawla2002smote}
+Nitesh~V Chawla, Kevin~W Bowyer, Lawrence~O Hall, and W~Philip Kegelmeyer.
+\newblock Smote: synthetic minority over-sampling technique.
+\newblock \emph{Journal of artificial intelligence research}, 16:\penalty0 321--357, 2002.
+
+\bibitem[Coppersmith et~al.(2014)Coppersmith, Dredze, and Harman]{coppersmith2014quantifying}
+Glen Coppersmith, Mark Dredze, and Craig Harman.
+\newblock Quantifying mental health signals in twitter.
+\newblock In \emph{Proceedings of the workshop on computational linguistics and clinical psychology: from linguistic signal to clinical reality}, pages 51--60, 2014.
+
+\bibitem[De~Choudhury et~al.(2013)De~Choudhury, Gamon, Counts, and Horvitz]{dechoudhury2013predicting}
+Munmun De~Choudhury, Michael Gamon, Scott Counts, and Eric Horvitz.
+\newblock Predicting depression via social media.
+\newblock In \emph{Proceedings of the international AAAI conference on web and social media}, volume~7, pages 128--137, 2013.
+
+\bibitem[Jolliffe and Cadima(2016)]{jolliffe2016principal}
+Ian~T Jolliffe and Jorge Cadima.
+\newblock Principal component analysis: a review and recent developments.
+\newblock \emph{Philosophical Transactions of the Royal Society A}, 374\penalty0 (2065):\penalty0 20150202, 2016.
+
+\bibitem[Kingma and Ba(2014)]{kingma2014adam}
+Diederik~P Kingma and Jimmy Ba.
+\newblock Adam: A method for stochastic optimization.
+\newblock \emph{arXiv preprint arXiv:1412.6980}, 2014.
+
+\bibitem[Mikolov et~al.(2013)Mikolov, Chen, Corrado, and Dean]{mikolov2013efficient}
+Tomas Mikolov, Kai Chen, Greg Corrado, and Jeffrey Dean.
+\newblock Efficient estimation of word representations in vector space.
+\newblock \emph{arXiv preprint arXiv:1301.3781}, 2013.
+
+\bibitem[Pennington et~al.(2014)Pennington, Socher, and Manning]{pennington2014glove}
+Jeffrey Pennington, Richard Socher, and Christopher~D Manning.
+\newblock Glove: Global vectors for word representation.
+\newblock In \emph{Proceedings of the 2014 conference on empirical methods in natural language processing (EMNLP)}, pages 1532--1543, 2014.
+
+\bibitem[Qui{\~n}onero-Candela et~al.(2009)Qui{\~n}onero-Candela, Sugiyama, Schwaighofer, and Lawrence]{quionero2009dataset}
+Joaquin Qui{\~n}onero-Candela, Masashi Sugiyama, Anton Schwaighofer, and Neil~D Lawrence.
+\newblock \emph{Dataset shift in machine learning}.
+\newblock MIT Press, 2009.
+
+\bibitem[Rezapour et~al.(2019)Rezapour, Shah, and Diesner]{rezapour2019combining}
+Rezvaneh Rezapour, Sameer~H Shah, and Jana Diesner.
+\newblock Enhancing the measurement of social effects by capturing morality.
+\newblock In \emph{Proceedings of the tenth workshop on computational approaches to subjectivity, sentiment and social media analysis}, pages 35--45, 2019.
+
+\bibitem[Salton and Buckley(1988)]{salton1988term}
+Gerard Salton and Christopher Buckley.
+\newblock Term-weighting approaches in automatic text retrieval.
+\newblock \emph{Information processing \& management}, 24\penalty0 (5):\penalty0 513--523, 1988.
+
+\bibitem[{World Health Organization}(2023)]{who_depression}
+{World Health Organization}.
+\newblock Depression, 2023.
+\newblock URL \url{https://www.who.int/news-room/fact-sheets/detail/depression}.
+\newblock Accessed: 2024.
+
+\end{thebibliography}

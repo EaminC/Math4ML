@@ -1,0 +1,212 @@
+\documentclass{article}
+
+% if you need to pass options to natbib, use, e.g.:
+%     \PassOptionsToPackage{numbers, compress}{natbib}
+% before loading neurips_2024
+
+
+% ready for submission
+\usepackage[preprint]{neurips_2024}
+
+
+% to compile a preprint version, e.g., for submission to arXiv, add add the
+% [preprint] option:
+%     \usepackage[preprint]{neurips_2024}
+
+
+% to compile a camera-ready version, add the [final] option, e.g.:
+%     \usepackage[final]{neurips_2024}
+
+
+% to avoid loading the natbib package, add option nonatbib:
+%    \usepackage[nonatbib]{neurips_2024}
+
+
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage{hyperref}       % hyperlinks
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{amsmath}         % additional math commands
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+\usepackage{xcolor}         % colors
+\usepackage{titlesec}        % for compact section spacing
+
+% Compact formatting for one-page proposal
+\setlength{\parskip}{0.2ex}
+\setlength{\itemsep}{0.05ex}
+\setlength{\topsep}{0.1ex}
+\setlength{\partopsep}{0ex}
+\setlength{\abovedisplayskip}{0.2ex}
+\setlength{\belowdisplayskip}{0.2ex}
+\setlength{\abovedisplayshortskip}{0.1ex}
+\setlength{\belowdisplayshortskip}{0.1ex}
+\renewcommand{\baselinestretch}{0.92}
+\titlespacing*{\section}{0pt}{0.6ex}{0.3ex}
+\titlespacing*{\subsection}{0pt}{0.4ex}{0.2ex}
+
+% Reduce title and author spacing
+\makeatletter
+\renewcommand{\@toptitlebar}{%
+  \hrule height 2\p@
+  \vskip 0.1in
+  \vskip -\parskip%
+}
+\renewcommand{\@bottomtitlebar}{%
+  \vskip 0.15in
+  \vskip -\parskip
+  \hrule height 1\p@
+  \vskip 0.05in%
+}
+\renewcommand{\@maketitle}{%
+  \vbox{%
+    \hsize\textwidth
+    \linewidth\hsize
+    \vskip 0.05in
+    \@toptitlebar
+    \centering
+    {\Large\bf \@title\par}
+    \@bottomtitlebar
+    \if@submission
+      \begin{tabular}[t]{c}\bf\rule{\z@}{16\p@}
+        Anonymous Author(s) \\
+        Affiliation \\
+        Address \\
+        \texttt{email} \\
+      \end{tabular}%
+    \else
+      \def\And{%
+        \end{tabular}\hfil\linebreak[0]\hfil%
+        \begin{tabular}[t]{c}\bf\rule{\z@}{16\p@}\ignorespaces%
+      }
+      \def\AND{%
+        \end{tabular}\hfil\linebreak[4]\hfil%
+        \begin{tabular}[t]{c}\bf\rule{\z@}{16\p@}\ignorespaces%
+      }
+      \begin{tabular}[t]{c}\bf\rule{\z@}{16\p@}\@author\end{tabular}%
+    \fi
+    \vskip 0.15in \@minus 0.05in
+  }
+}
+\makeatother
+
+
+\title{Depression Detection from Social Media Text: A Machine Learning Approach with Distribution Drift Handling}
+
+
+% The \author macro works with any number of authors. There are two commands
+% used to separate the names and addresses of multiple authors: \And and \AND.
+%
+% Using \And between authors leaves it to LaTeX to determine where to break the
+% lines. Using \AND forces a line break at that point. So, if LaTeX puts 3 of 4
+% authors names on the first line, and the last on the second line, try using
+% \AND instead of \And before the third author name.
+
+
+\author{%
+  Yiming Cheng$^1$ \quad Yi Wu$^1$ \\
+  $^1$Department of Computer Science, University of Chicago, MPCS Predoc \\
+  \texttt{eaminchan@uchicago.edu}, \texttt{yiwu@uchicago.edu}
+}
+
+
+\begin{document}
+
+
+\maketitle
+
+
+\begin{abstract}
+  We propose a machine learning framework for depression detection from social media text, addressing distribution drift. We employ multiple vectorization techniques (TF-IDF, N-grams, Word2Vec, GloVe), PCA, and evaluate classifiers (logistic regression, SVM, neural networks with SGD). Methodology includes preprocessing, SMOTE for class balancing, and evaluation using F1-score, precision, recall, AUC-ROC. Dataset: 10,325 depressed and 22,245 normal samples from X (Twitter).
+\end{abstract}
+
+
+\section{Introduction and problem statement}
+
+Depression affects millions worldwide; early detection is crucial \cite{who_depression}. Social media provides rich linguistic data revealing psychological states \cite{dechoudhury2013predicting}. Previous work demonstrates feasibility of depression detection from social media \cite{coppersmith2014quantifying, rezapour2019combining}. We propose an ML system analyzing social media posts to identify at-risk individuals, addressing distribution drift challenges.
+
+\section{Dataset}
+
+We constructed a dataset via systematic collection and manual annotation from X (Twitter) through web scraping. A crawler extracts user posts with metadata (gender, age, follower counts, engagement metrics, timestamps) stored in a database. Raw data was manually annotated through a custom labeling interface, with each user's posts reviewed and assigned binary labels (depressed/normal). Final dataset: \textbf{Depressed}: 10,325 samples; \textbf{Normal}: 22,245 samples.
+
+\section{Proposed methodology}
+
+Our pipeline addresses mental health text classification challenges. \textbf{Data preprocessing}: We address class imbalance and distribution drift between training and test sets \cite{quionero2009dataset}, quantified via Kullback-Leibler divergence (see Appendix). We employ SMOTE \cite{chawla2002smote} or random undersampling for class balancing.
+
+\textbf{Text vectorization}: We explore multiple representations: (1) \textbf{TF-IDF} \cite{salton1988term} for term weighting; (2) \textbf{N-grams} (unigrams, bigrams, trigrams) to capture local word dependencies; (3) \textbf{Word embeddings} using pre-trained Word2Vec \cite{mikolov2013efficient} and GloVe \cite{pennington2014glove} for semantic representations. Detailed formulations are provided in the Appendix.
+
+\textbf{Dimensionality reduction}: We apply Principal Component Analysis (PCA) \cite{jolliffe2016principal} to reduce high-dimensional text features, retaining components explaining 95\% variance. The optimization formulation is detailed in the Appendix.
+
+\textbf{Classification}: We evaluate multiple classifiers: (1) \textbf{Logistic Regression} for probabilistic classification; (2) \textbf{Support Vector Machines (SVM)} for maximum-margin classification; (3) \textbf{Neural Networks} trained via stochastic gradient descent (SGD) \cite{bottou2010}, also exploring Adam \cite{kingma2014adam} and RMSprop optimizers. Mathematical formulations are provided in the Appendix.
+
+\textbf{Evaluation}: We report comprehensive metrics including F1-score, Precision, Recall, Accuracy, and Area Under the ROC Curve (AUC-ROC). Detailed metric definitions are provided in the Appendix.
+
+\section{Expected contributions}
+
+This project demonstrates fundamental ML techniques (PCA, gradient descent, regularization) applied to mental health, addressing distribution drift and class imbalance. We aim to identify the most effective text representation and classification methods for depression detection in social media data.
+
+\newpage
+\appendix
+\section{Mathematical Formulations}
+
+\subsection{Distribution Drift Quantification}
+We quantify distribution drift using Kullback-Leibler divergence:
+\begin{equation}
+D_{\mathrm{KL}}(P_{\mathrm{test}} \| P_{\mathrm{train}}) = \sum_{x,y} P_{\mathrm{test}}(x,y) \log \frac{P_{\mathrm{test}}(x,y)}{P_{\mathrm{train}}(x,y)}
+\end{equation}
+where $P_{\mathrm{train}}(X, Y)$ and $P_{\mathrm{test}}(X, Y)$ denote the training and test distributions, respectively.
+
+\subsection{Text Vectorization}
+\textbf{TF-IDF}: For a term $t$ in document $d$, the TF-IDF score is:
+\begin{equation}
+\mathrm{TF\text{-}IDF}(t,d) = \mathrm{TF}(t,d) \times \log \frac{N}{df(t)}
+\end{equation}
+where $N$ is the total number of documents and $df(t)$ is the document frequency of term $t$.
+
+\textbf{Word2Vec}: Word2Vec learns word representations by maximizing the log-likelihood:
+\begin{equation}
+\sum_{t=1}^{T} \sum_{-c \leq j \leq c, j \neq 0} \log p(w_{t+j} | w_t)
+\end{equation}
+where $c$ is the context window size and $T$ is the sequence length.
+
+\subsection{Dimensionality Reduction}
+For a data matrix $X \in \mathbb{R}^{n \times p}$, PCA finds the principal components by solving:
+\begin{equation}
+\max_{\mathbf{w}} \mathbf{w}^T \mathbf{\Sigma} \mathbf{w} \quad \text{subject to} \quad \|\mathbf{w}\|_2 = 1
+\end{equation}
+where $\mathbf{\Sigma}$ is the covariance matrix.
+
+\subsection{Classification Algorithms}
+\textbf{Logistic Regression}: Models the probability $P(Y=1|X)$ using:
+\begin{equation}
+P(Y=1|X) = \frac{1}{1 + \exp(-\mathbf{w}^T \mathbf{x} - b)}
+\end{equation}
+
+\textbf{Support Vector Machines}: Find the optimal hyperplane by solving:
+\begin{equation}
+\min_{\mathbf{w}, b} \frac{1}{2}\|\mathbf{w}\|^2 + C \sum_{i=1}^{n} \xi_i
+\end{equation}
+subject to $y_i(\mathbf{w}^T \mathbf{x}_i + b) \geq 1 - \xi_i$ for all $i$.
+
+\textbf{Neural Networks with Gradient Descent}: We train feedforward networks using stochastic gradient descent (SGD) with updates:
+\begin{equation}
+\theta_{t+1} = \theta_t - \eta \nabla_{\theta} \mathcal{L}(\theta_t; x_i, y_i)
+\end{equation}
+where $\eta$ is the learning rate and $\mathcal{L}$ is the loss function.
+
+\subsection{Evaluation Metrics}
+We report comprehensive metrics:
+\begin{align}
+\text{F1-score:} \quad & F_1 = \frac{2 \cdot \mathrm{Precision} \cdot \mathrm{Recall}}{\mathrm{Precision} + \mathrm{Recall}} \\
+\text{Precision:} \quad & P = \frac{TP}{TP + FP} \\
+\text{Recall:} \quad & R = \frac{TP}{TP + FN} \\
+\text{Accuracy:} \quad & A = \frac{TP + TN}{TP + TN + FP + FN}
+\end{align}
+where $TP$, $TN$, $FP$, and $FN$ denote true positives, true negatives, false positives, and false negatives, respectively.
+
+\bibliography{references}
+\bibliographystyle{plainnat}
+
+\end{document}

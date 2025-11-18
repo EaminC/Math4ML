@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Depression Labeling System - Labeling Interface</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: #f5f5f5;
+        padding: 20px;
+      }
+
+      .header {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .user-info {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .user-info h2 {
+        color: #333;
+        margin-bottom: 15px;
+      }
+
+      .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-bottom: 15px;
+      }
+
+      .info-item {
+        padding: 10px;
+        background: #f8f9fa;
+        border-radius: 5px;
+      }
+
+      .info-item label {
+        font-weight: 600;
+        color: #666;
+        display: block;
+        margin-bottom: 5px;
+      }
+
+      .info-item span {
+        color: #333;
+      }
+
+      .profile {
+        margin-top: 15px;
+        padding: 15px;
+        background: #f8f9fa;
+        border-radius: 5px;
+        border-left: 4px solid #667eea;
+      }
+
+      .tweets-section {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        max-height: 400px;
+        overflow-y: auto;
+      }
+
+      .tweets-section h3 {
+        color: #333;
+        margin-bottom: 15px;
+      }
+
+      .tweet-item {
+        padding: 15px;
+        margin-bottom: 10px;
+        background: #f8f9fa;
+        border-radius: 5px;
+        border-left: 3px solid #667eea;
+      }
+
+      .tweet-meta {
+        font-size: 12px;
+        color: #666;
+        margin-top: 8px;
+      }
+
+      .dimensions-section {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .dimensions-section h3 {
+        color: #333;
+        margin-bottom: 20px;
+      }
+
+      .dimension-item {
+        padding: 15px;
+        margin-bottom: 15px;
+        background: #f8f9fa;
+        border-radius: 5px;
+        border: 2px solid transparent;
+        transition: all 0.3s;
+      }
+
+      .dimension-item:hover {
+        border-color: #667eea;
+      }
+
+      .dimension-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+      }
+
+      .dimension-name {
+        font-weight: 600;
+        color: #333;
+      }
+
+      .dimension-description {
+        font-size: 14px;
+        color: #666;
+        margin-bottom: 10px;
+      }
+
+      .dimension-options {
+        display: flex;
+        gap: 10px;
+      }
+
+      .option-btn {
+        padding: 8px 16px;
+        border: 2px solid #ddd;
+        background: white;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-size: 14px;
+      }
+
+      .option-btn:hover {
+        border-color: #667eea;
+      }
+
+      .option-btn.active.positive {
+        background: #ff6b6b;
+        color: white;
+        border-color: #ff6b6b;
+      }
+
+      .option-btn.active.negative {
+        background: #51cf66;
+        color: white;
+        border-color: #51cf66;
+      }
+
+      .summary {
+        background: #fff3cd;
+        padding: 15px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        border-left: 4px solid #ffc107;
+      }
+
+      .summary h4 {
+        color: #856404;
+        margin-bottom: 10px;
+      }
+
+      .summary p {
+        color: #856404;
+      }
+
+      .actions {
+        display: flex;
+        gap: 10px;
+      }
+
+      .btn {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      .btn-secondary {
+        background: #6c757d;
+        color: white;
+      }
+
+      .btn-secondary:hover {
+        background: #5a6268;
+      }
+
+      .btn-success {
+        background: #28a745;
+        color: white;
+      }
+
+      .btn-success:hover {
+        background: #218838;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <h1>Depression Labeling System</h1>
+      <div>
+        <span>Labeler: <strong>{{ labeler_name }}</strong></span>
+        <button
+          class="btn btn-secondary"
+          onclick="logout()"
+          style="margin-left: 20px"
+        >
+          Logout
+        </button>
+      </div>
+    </div>
+
+    <div class="user-info">
+      <h2>User Information</h2>
+      <div class="info-grid">
+        <div class="info-item">
+          <label>Nickname:</label>
+          <span>{{ user_data.nickname or 'Unknown' }}</span>
+        </div>
+        <div class="info-item">
+          <label>Gender:</label>
+          <span>{{ user_data.gender or 'Unknown' }}</span>
+        </div>
+        <div class="info-item">
+          <label>Followers:</label>
+          <span>{{ user_data.num_of_follower or 0 }}</span>
+        </div>
+        <div class="info-item">
+          <label>Following:</label>
+          <span>{{ user_data.num_of_following or 0 }}</span>
+        </div>
+        <div class="info-item">
+          <label>Total Posts:</label>
+          <span>{{ user_data.all_tweet_count or 0 }}</span>
+        </div>
+        <div class="info-item">
+          <label>Original Posts:</label>
+          <span>{{ user_data.original_tweet_count or 0 }}</span>
+        </div>
+      </div>
+      {% if user_data.profile and user_data.profile != 'None' %}
+      <div class="profile">
+        <strong>Profile:</strong> {{ user_data.profile }}
+      </div>
+      {% endif %}
+    </div>
+
+    <div class="tweets-section">
+      <h3>User Posts (Showing up to 50 recent posts)</h3>
+      {% for tweet in user_data.tweets %}
+      <div class="tweet-item">
+        <div>{{ tweet.tweet_content or 'No content' }}</div>
+        <div class="tweet-meta">
+          Posting Time: {{ tweet.posting_time or 'Unknown' }} | Likes: {{
+          tweet.num_of_likes or 0 }} | Forwards: {{ tweet.num_of_forwards or 0
+          }} | Comments: {{ tweet.num_of_comments or 0 }} | {% if
+          tweet.tweet_is_original == 'True' %}Original{% else %}Repost{% endif
+          %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="dimensions-section">
+      <h3>
+        Evaluation Dimensions (Please carefully review user posts before
+        evaluation)
+      </h3>
+      <div class="summary">
+        <h4>Labeling Rules</h4>
+        <p>
+          Select "Positive" or "Negative" for each dimension. If 5 or more
+          dimensions are positive, the final label is "Depressed"; otherwise
+          "Normal".
+        </p>
+        <p id="summary-text">
+          Current Positive Dimensions: <strong>0/10</strong>
+        </p>
+      </div>
+
+      {% for dim in dimensions %}
+      <div class="dimension-item">
+        <div class="dimension-header">
+          <div class="dimension-name">{{ dim.name }}</div>
+        </div>
+        <div class="dimension-description">{{ dim.description }}</div>
+        <div class="dimension-options">
+          <button
+            class="option-btn positive"
+            data-dim="{{ dim.id }}"
+            data-value="1"
+            onclick="selectOption(this)"
+          >
+            Positive
+          </button>
+          <button
+            class="option-btn negative"
+            data-dim="{{ dim.id }}"
+            data-value="0"
+            onclick="selectOption(this)"
+          >
+            Negative
+          </button>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-primary" onclick="submitLabel()">
+        Submit Label
+      </button>
+      <button class="btn btn-secondary" onclick="skipUser()">Skip User</button>
+      <button class="btn btn-success" onclick="loadNextUser()">
+        Next User
+      </button>
+      <button
+        class="btn btn-secondary"
+        onclick="loadFromJSONL()"
+        style="background: #17a2b8"
+      >
+        Load from Dataset
+      </button>
+    </div>
+
+    <script>
+      const userId = "{{ user_data.user_id }}";
+      const dimensionScores = {};
+
+      function selectOption(btn) {
+        const dimId = btn.dataset.dim;
+        const value = parseInt(btn.dataset.value);
+
+        // Remove active state from other buttons in same group
+        const parent = btn.parentElement;
+        parent
+          .querySelectorAll(".option-btn")
+          .forEach((b) => b.classList.remove("active"));
+
+        // Add active state to current button
+        btn.classList.add("active");
+
+        // Save selection
+        dimensionScores[dimId] = value;
+
+        // Update summary
+        updateSummary();
+      }
+
+      function updateSummary() {
+        const positiveCount = Object.values(dimensionScores).filter(
+          (v) => v === 1
+        ).length;
+        const totalSelected = Object.keys(dimensionScores).length;
+        const finalLabel = positiveCount >= 5 ? "Depressed" : "Normal";
+
+        document.getElementById(
+          "summary-text"
+        ).innerHTML = `Current Positive Dimensions: <strong>${positiveCount}/10</strong> (Selected: ${totalSelected}/10) | Final Label: <strong>${finalLabel}</strong>`;
+      }
+
+      async function submitLabel() {
+        const totalSelected = Object.keys(dimensionScores).length;
+        if (totalSelected < 10) {
+          alert("Please complete all 10 dimension evaluations");
+          return;
+        }
+
+        const response = await fetch("/submit_label", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            user_id: userId,
+            dimension_scores: dimensionScores,
+          }),
+        });
+
+        const data = await response.json();
+        if (data.success) {
+          alert(data.message);
+          loadNextUser();
+        } else {
+          alert("Submission failed: " + data.message);
+        }
+      }
+
+      function skipUser() {
+        if (confirm("Are you sure you want to skip this user?")) {
+          fetch("/skip_user", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              user_id: userId,
+            }),
+          }).then(() => {
+            loadNextUser();
+          });
+        }
+      }
+
+      function loadNextUser() {
+        window.location.reload();
+      }
+
+      function logout() {
+        fetch("/logout").then(() => {
+          window.location.href = "/";
+        });
+      }
+
+      async function loadFromJSONL() {
+        const jsonlPath = prompt(
+          "Enter JSONL path (e.g., ../Dataset/balance/depressed.jsonl):",
+          "../Dataset/balance/depressed.jsonl"
+        );
+        if (!jsonlPath) return;
+
+        const lineNumber = parseInt(
+          prompt("Enter line number (0-indexed):", "0") || "0"
+        );
+
+        const response = await fetch("/load_from_jsonl", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            jsonl_path: jsonlPath,
+            line_number: lineNumber,
+          }),
+        });
+
+        const data = await response.json();
+        if (data.success) {
+          alert(data.message);
+          loadNextUser();
+        } else {
+          alert("Failed: " + data.message);
+        }
+      }
+    </script>
+  </body>
+</html>

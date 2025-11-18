@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Depression Labeling System - Example</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+        
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .user-info {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .user-info h2 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .info-item {
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+        
+        .info-item label {
+            font-weight: 600;
+            color: #666;
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .info-item span {
+            color: #333;
+        }
+        
+        .profile {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .tweets-section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .tweets-section h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .tweet-item {
+            padding: 15px;
+            margin-bottom: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            border-left: 3px solid #667eea;
+        }
+        
+        .tweet-meta {
+            font-size: 12px;
+            color: #666;
+            margin-top: 8px;
+        }
+        
+        .dimensions-section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .dimensions-section h3 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        .dimension-item {
+            padding: 15px;
+            margin-bottom: 15px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .dimension-item:hover {
+            border-color: #667eea;
+        }
+        
+        .dimension-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .dimension-name {
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .dimension-description {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .dimension-options {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .option-btn {
+            padding: 8px 16px;
+            border: 2px solid #ddd;
+            background: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+        
+        .option-btn:hover {
+            border-color: #667eea;
+        }
+        
+        .option-btn.active.positive {
+            background: #ff6b6b;
+            color: white;
+            border-color: #ff6b6b;
+        }
+        
+        .option-btn.active.negative {
+            background: #51cf66;
+            color: white;
+            border-color: #51cf66;
+        }
+        
+        .summary {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 4px solid #ffc107;
+        }
+        
+        .summary h4 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+        
+        .summary p {
+            color: #856404;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+        
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Depression Labeling System</h1>
+        <div>
+            <span>Labeler: <strong>Yiming Cheng</strong></span>
+        </div>
+    </div>
+    
+    <div class="user-info">
+        <h2>User Information</h2>
+        <div class="info-grid">
+            <div class="info-item">
+                <label>Nickname:</label>
+                <span>迷失路径</span>
+            </div>
+            <div class="info-item">
+                <label>Gender:</label>
+                <span>男</span>
+            </div>
+            <div class="info-item">
+                <label>Followers:</label>
+                <span>1</span>
+            </div>
+            <div class="info-item">
+                <label>Following:</label>
+                <span>0</span>
+            </div>
+            <div class="info-item">
+                <label>Total Posts:</label>
+                <span>10</span>
+            </div>
+            <div class="info-item">
+                <label>Original Posts:</label>
+                <span>10</span>
+            </div>
+        </div>
+        <div class="profile">
+            <strong>Profile:</strong> 此人严重丧，不适绕行，谢谢
+        </div>
+    </div>
+    
+    <div class="tweets-section">
+        <h3>User Posts (Showing up to 50 recent posts)</h3>
+        <div class="tweet-item">
+            <div>有点累想休息了</div>
+            <div class="tweet-meta">
+                Posting Time: 2019-11-19 18:09:21 | 
+                Likes: 0 | 
+                Forwards: 0 | 
+                Comments: 1 | 
+                Original
+            </div>
+        </div>
+        <div class="tweet-item">
+            <div>为什么总有领导作为外行人在不了解的情况下就异想天开的安排人做一些完全不可能做到的事情还喜欢用我不看你能不能做和过程我只看结果特别喜欢将我不管你怎么做我只要结果这句话当成核心</div>
+            <div class="tweet-meta">
+                Posting Time: 2019-11-11 11:33:13 | 
+                Likes: 0 | 
+                Forwards: 0 | 
+                Comments: 0 | 
+                Original
+            </div>
+        </div>
+        <div class="tweet-item">
+            <div>最终还是注册了这样一个微博说实在的感觉注册时候想说的很多但一写起来就似乎不知道要写什么 总归这里是一个非常非常非常丧的微博大概就是负能量拉满吧所以能够有缘看到这里的人如果讨厌这种还是绕道吧 这里博主算是一个严重抑郁症的人拨打过救助热线也自己找过医生其实我一直感觉给我做的抑郁症的题挺扯淡的因为上面的选项明显意味着选哪些会有抑郁症只有在没有认识的人时候我才会认真做那些试题毫无疑问比较严重 其实很多人对于抑郁症还是有不少误解在生活中除去很早很早之前还有着小孩子脾气会对着外面的人愁眉苦脸甚至抱怨展现出消极的气息但我现在绝不会对身边的人甩任何脸色笑容占据了我生活中8成以上的时间我从不想对任何有一丁点关系的人说兄弟我可能抑郁了这个东西在人听来更像是无病呻吟也像是在追求朋友的安慰稍有不慎甚至会换来更多的嘲笑因此我是一直憋在心里一直憋着 直到几年的现在基本每天每天每天每天每天我都感觉到喘不过气越来越压抑的内心并且长期出现难受呕吐感的感觉无论是在工作还是在家里一面保持着微笑一面忍受着这种痛苦真难 这个微博大概会在我想起来时候上说出来或许会轻松很多我将在这里倾泻大量负面垃圾不满日常以及往日的难以忍受 路过的各位你们可以看看也可以痛斥我的种种甚至随意谩骂毕竟家里对我的标签都是废物二字我有什么不能够接受的呢 记录生活宣泄情绪在这样一个陌生的地方我想要治愈自己我想要知道通过这种方式能否缓解我的抑郁 此号绝非营销如果是营销我当场去世只会偶尔想起来写写不满所以第三次提示绝对有非常非常非常多的丧话本身只是我对着一个谁都不认识的陌生地方宣泄的场所所以不喜绕道右上角谢谢</div>
+            <div class="tweet-meta">
+                Posting Time: 2019-11-05 11:50:03 | 
+                Likes: 0 | 
+                Forwards: 0 | 
+                Comments: 1 | 
+                Original
+            </div>
+        </div>
+        <div class="tweet-item">
+            <div>今天被领导痛斥了 毕业也好几年工作换了一个又一个从第一份我真正喜欢的工作还未过去上一天班开始我被家里强硬叫回了家乡 说实在的我不喜欢家乡这里到处充斥着低素质路上8成的非机动车视红灯为无物两人坐的小型电轿到处别车乱开晚上十辆车里有一辆疯狂的开着远光夜跑时基本三天就能看到有家长让自己小孩甚至看上去四五年级大的小孩在路边拉屎太多太多的事在他们眼里都正常不过我的反感也只是他们眼中的不正常...</div>
+            <div class="tweet-meta">
+                Posting Time: 2019-11-05 12:02:02 | 
+                Likes: 0 | 
+                Forwards: 0 | 
+                Comments: 0 | 
+                Original
+            </div>
+        </div>
+        <div class="tweet-item">
+            <div>又是被压得喘不过气的一天一度怀疑是我时运不好碰到的都是差的工作还是我人就是个不可回收的垃圾干一行恨一行 这一份工作还是国企干的也是最久差不多一年半正式编制这种工作本该是其他人眼中无限风光的工作尤其是我所在的小城市本应是非常多人眼中羡慕的工作也许真的是我太挑剔不适合做一个人也许我的懒是根深蒂固的亦或者抑郁太深看什么都感觉是灰色的...</div>
+            <div class="tweet-meta">
+                Posting Time: 2019-11-06 16:20:09 | 
+                Likes: 1 | 
+                Forwards: 0 | 
+                Comments: 1 | 
+                Original
+            </div>
+        </div>
+        <div class="tweet-item">
+            <div>一上午到底接了多少工作有些头晕分不清只记得经理不断说着小X把这个活接一下以后都是你负责小X咱们部门缺人手你要理解这个活也接一下你先兼着负责大不了干两三年你再给别人嘛这类的话上午听到了几次呢五次六次记不太清了除去最开始的后面的内容也记不太清了...</div>
+            <div class="tweet-meta">
+                Posting Time: 2019-11-07 11:34:41 | 
+                Likes: 0 | 
+                Forwards: 0 | 
+                Comments: 0 | 
+                Original
+            </div>
+        </div>
+        <div class="tweet-item">
+            <div>周一又是周一对于这个日子总是让人恐惧 周末还算比较放松久违的和朋友出去玩耍一段时间比较有效的得到了放松虽然也有一些不开心的事尽量不去想一路朋友总把我当成带动全队气氛的人自黑一会嘴贱一会总归在他人看来也许我是世界上最快乐的那个人吧...</div>
+            <div class="tweet-meta">
+                Posting Time: 2019-11-11 11:26:22 | 
+                Likes: 0 | 
+                Forwards: 0 | 
+                Comments: 0 | 
+                Original
+            </div>
+        </div>
+        <div class="tweet-item">
+            <div>实在是喘不过气太多次想要一了百了还是懦弱在内心的恐惧想要出去散散心请了两天假去了大学在的城市没有想到还是源源不断的烦心同事一个月请假三四次每次一两天次次走了之后经理都会说不要打扰人家到了我出去从8点下了火车之后就是电话轰炸新的老的工作全部扔给我...</div>
+            <div class="tweet-meta">
+                Posting Time: 2019-11-19 12:16:56 | 
+                Likes: 0 | 
+                Forwards: 0 | 
+                Comments: 1 | 
+                Original
+            </div>
+        </div>
+        <div class="tweet-item">
+            <div>又是一周让人丧气的过去绝望事太多就多到连发泄都做不到 简单说一下自己的日常行程吧这座城市一般就是朝8晚5点半由于城市小所以中午午休比较长都可以选择回家...</div>
+            <div class="tweet-meta">
+                Posting Time: 2019-11-30 12:49:07 | 
+                Likes: 0 | 
+                Forwards: 0 | 
+                Comments: 0 | 
+                Original
+            </div>
+        </div>
+        <div class="tweet-item">
+            <div>垃圾一样的生日也算浑浑噩噩又过了一年明天再去趟医院好了看看医生会不会开点抑制精神类药物 今天差点就忍不住说再见垃圾的废物人生 垃圾的混日子混退休政策一个个老玩意干不了活就干不了活凭什么还动不动骂人喷人谁比谁低一等凭什么工作年限高就可以想来就来想走就走一天在公司里待三四个小时还一直和个泉水指挥官一样嚣张的四处指挥大声的泡几个小时电话骂骂人还真是舒适呢养到退休的狗玩意 狗屎一样的生日现在还会不会混过去这一岁</div>
+            <div class="tweet-meta">
+                Posting Time: 2019-12-11 16:12:50 | 
+                Likes: 1 | 
+                Forwards: 0 | 
+                Comments: 1 | 
+                Original
+            </div>
+        </div>
+    </div>
+    
+    <div class="dimensions-section">
+        <h3>Evaluation Dimensions (Please carefully review user posts before evaluation)</h3>
+        <div class="summary">
+            <h4>Labeling Rules</h4>
+            <p>Select "Positive" or "Negative" for each dimension. If 5 or more dimensions are positive, the final label is "Depressed"; otherwise "Normal".</p>
+            <p id="summary-text">Current Positive Dimensions: <strong>0/10</strong></p>
+        </div>
+        
+        <div class="dimension-item">
+            <div class="dimension-header">
+                <div class="dimension-name">Depressed Mood</div>
+            </div>
+            <div class="dimension-description">User posts show persistent depressed mood, sadness, hopelessness and other negative emotions</div>
+            <div class="dimension-options">
+                <button class="option-btn positive" data-dim="dim1" data-value="1" onclick="selectOption(this)">
+                    Positive
+                </button>
+                <button class="option-btn negative" data-dim="dim1" data-value="0" onclick="selectOption(this)">
+                    Negative
+                </button>
+            </div>
+        </div>
+        
+        <div class="dimension-item">
+            <div class="dimension-header">
+                <div class="dimension-name">Loss of Interest</div>
+            </div>
+            <div class="dimension-description">Loss of interest in daily activities, hobbies or social activities, showing obvious interest reduction</div>
+            <div class="dimension-options">
+                <button class="option-btn positive" data-dim="dim2" data-value="1" onclick="selectOption(this)">
+                    Positive
+                </button>
+                <button class="option-btn negative" data-dim="dim2" data-value="0" onclick="selectOption(this)">
+                    Negative
+                </button>
+            </div>
+        </div>
+        
+        <div class="dimension-item">
+            <div class="dimension-header">
+                <div class="dimension-name">Fatigue</div>
+            </div>
+            <div class="dimension-description">Frequently expressing fatigue, weakness, lack of energy, feeling tired doing anything</div>
+            <div class="dimension-options">
+                <button class="option-btn positive" data-dim="dim3" data-value="1" onclick="selectOption(this)">
+                    Positive
+                </button>
+                <button class="option-btn negative" data-dim="dim3" data-value="0" onclick="selectOption(this)">
+                    Negative
+                </button>
+            </div>
+        </div>
+        
+        <div class="dimension-item">
+            <div class="dimension-header">
+                <div class="dimension-name">Sleep Problems</div>
+            </div>
+            <div class="dimension-description">Mentioning insomnia, early awakening, excessive sleep or poor sleep quality</div>
+            <div class="dimension-options">
+                <button class="option-btn positive" data-dim="dim4" data-value="1" onclick="selectOption(this)">
+                    Positive
+                </button>
+                <button class="option-btn negative" data-dim="dim4" data-value="0" onclick="selectOption(this)">
+                    Negative
+                </button>
+            </div>
+        </div>
+        
+        <div class="dimension-item">
+            <div class="dimension-header">
+                <div class="dimension-name">Appetite Changes</div>
+            </div>
+            <div class="dimension-description">Significant decrease or increase in appetite, significant weight changes</div>
+            <div class="dimension-options">
+                <button class="option-btn positive" data-dim="dim5" data-value="1" onclick="selectOption(this)">
+                    Positive
+                </button>
+                <button class="option-btn negative" data-dim="dim5" data-value="0" onclick="selectOption(this)">
+                    Negative
+                </button>
+            </div>
+        </div>
+        
+        <div class="dimension-item">
+            <div class="dimension-header">
+                <div class="dimension-name">Low Self-Worth</div>
+            </div>
+            <div class="dimension-description">Showing inferiority, self-blame, self-negation, considering oneself worthless or useless</div>
+            <div class="dimension-options">
+                <button class="option-btn positive" data-dim="dim6" data-value="1" onclick="selectOption(this)">
+                    Positive
+                </button>
+                <button class="option-btn negative" data-dim="dim6" data-value="0" onclick="selectOption(this)">
+                    Negative
+                </button>
+            </div>
+        </div>
+        
+        <div class="dimension-item">
+            <div class="dimension-header">
+                <div class="dimension-name">Difficulty Concentrating</div>
+            </div>
+            <div class="dimension-description">Difficulty concentrating, memory decline, decision-making difficulties</div>
+            <div class="dimension-options">
+                <button class="option-btn positive" data-dim="dim7" data-value="1" onclick="selectOption(this)">
+                    Positive
+                </button>
+                <button class="option-btn negative" data-dim="dim7" data-value="0" onclick="selectOption(this)">
+                    Negative
+                </button>
+            </div>
+        </div>
+        
+        <div class="dimension-item">
+            <div class="dimension-header">
+                <div class="dimension-name">Suicidal Ideation</div>
+            </div>
+            <div class="dimension-description">Mentioning death, suicidal thoughts, self-harm behavior or related hints</div>
+            <div class="dimension-options">
+                <button class="option-btn positive" data-dim="dim8" data-value="1" onclick="selectOption(this)">
+                    Positive
+                </button>
+                <button class="option-btn negative" data-dim="dim8" data-value="0" onclick="selectOption(this)">
+                    Negative
+                </button>
+            </div>
+        </div>
+        
+        <div class="dimension-item">
+            <div class="dimension-header">
+                <div class="dimension-name">Social Withdrawal</div>
+            </div>
+            <div class="dimension-description">Reduced social activities, avoiding others, small social network or little interaction</div>
+            <div class="dimension-options">
+                <button class="option-btn positive" data-dim="dim9" data-value="1" onclick="selectOption(this)">
+                    Positive
+                </button>
+                <button class="option-btn negative" data-dim="dim9" data-value="0" onclick="selectOption(this)">
+                    Negative
+                </button>
+            </div>
+        </div>
+        
+        <div class="dimension-item">
+            <div class="dimension-header">
+                <div class="dimension-name">Somatic Symptoms</div>
+            </div>
+            <div class="dimension-description">Mentioning headaches, stomach pain, chest tightness and other physical discomfort without obvious organic causes</div>
+            <div class="dimension-options">
+                <button class="option-btn positive" data-dim="dim10" data-value="1" onclick="selectOption(this)">
+                    Positive
+                </button>
+                <button class="option-btn negative" data-dim="dim10" data-value="0" onclick="selectOption(this)">
+                    Negative
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="actions">
+        <button class="btn btn-primary" onclick="submitLabel()">Submit Label</button>
+        <button class="btn btn-secondary" onclick="skipUser()">Skip User</button>
+        <button class="btn btn-success" onclick="loadNextUser()">Next User</button>
+    </div>
+    
+    <script>
+        const userId = 'example_user_001';
+        const dimensionScores = {};
+        
+        function selectOption(btn) {
+            const dimId = btn.dataset.dim;
+            const value = parseInt(btn.dataset.value);
+            
+            // Remove active state from other buttons in same group
+            const parent = btn.parentElement;
+            parent.querySelectorAll('.option-btn').forEach(b => b.classList.remove('active'));
+            
+            // Add active state to current button
+            btn.classList.add('active');
+            
+            // Save selection
+            dimensionScores[dimId] = value;
+            
+            // Update summary
+            updateSummary();
+        }
+        
+        function updateSummary() {
+            const positiveCount = Object.values(dimensionScores).filter(v => v === 1).length;
+            const totalSelected = Object.keys(dimensionScores).length;
+            const finalLabel = positiveCount >= 5 ? 'Depressed' : 'Normal';
+            
+            document.getElementById('summary-text').innerHTML = 
+                `Current Positive Dimensions: <strong>${positiveCount}/10</strong> (Selected: ${totalSelected}/10) | Final Label: <strong>${finalLabel}</strong>`;
+        }
+        
+        function submitLabel() {
+            const totalSelected = Object.keys(dimensionScores).length;
+            if (totalSelected < 10) {
+                alert('Please complete all 10 dimension evaluations');
+                return;
+            }
+            
+            const positiveCount = Object.values(dimensionScores).filter(v => v === 1).length;
+            const finalLabel = positiveCount >= 5 ? 'Depressed' : 'Normal';
+            
+            alert(`Labeling submitted!\nPositive dimensions: ${positiveCount}/10\nFinal label: ${finalLabel}\n\n(Note: This is a demo page, data is not saved)`);
+        }
+        
+        function skipUser() {
+            if (confirm('Are you sure you want to skip this user?')) {
+                alert('User skipped. (Note: This is a demo page)');
+            }
+        }
+        
+        function loadNextUser() {
+            alert('This is a demo page. In the actual application, this would load the next user.');
+        }
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,549 @@
+\documentclass{article}
+
+% if you need to pass options to natbib, use, e.g.:
+%     \PassOptionsToPackage{numbers, compress}{natbib}
+% before loading neurips_2024
+
+
+% ready for submission
+\usepackage{neurips_2024}
+
+
+% to compile a preprint version, e.g., for submission to arXiv, add add the
+% [preprint] option:
+%     \usepackage[preprint]{neurips_2024}
+
+
+% to compile a camera-ready version, add the [final] option, e.g.:
+%     \usepackage[final]{neurips_2024}
+
+
+% to avoid loading the natbib package, add option nonatbib:
+%    \usepackage[nonatbib]{neurips_2024}
+
+
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage{hyperref}       % hyperlinks
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{amsmath}        % additional math commands
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+\usepackage{xcolor}         % colors
+\usepackage{graphicx}       % for including images
+\usepackage{subcaption}     % for subfigures
+\usepackage{multirow}        % for multirow in tables
+
+
+\title{Depression Detection from Social Media Text: A Machine Learning Approach with Distribution Drift Handling}
+
+
+% The \author macro works with any number of authors. There are two commands
+% used to separate the names and addresses of multiple authors: \And and \AND.
+%
+% Using \And between authors leaves it to LaTeX to determine where to break the
+% lines. Using \AND forces a line break at that point. So, if LaTeX puts 3 of 4
+% authors names on the first line, and the last on the second line, try using
+% \AND instead of \And before the third author name.
+
+
+\author{%
+  Yiming Cheng$^1$ \quad Yi Wu$^1$ \\
+  $^1$Department of Computer Science, University of Chicago, MPCS Predoc \\
+  \texttt{eaminchan@uchicago.edu}, \texttt{yiwu@uchicago.edu}
+}
+
+
+\begin{document}
+
+
+\maketitle
+
+
+\begin{abstract}
+  We propose a machine learning framework for depression detection from social media text, addressing distribution drift challenges. Our approach employs multiple vectorization techniques (TF-IDF, N-grams, Word2Vec, GloVe), Principal Component Analysis (PCA) for dimensionality reduction, and evaluates various classifiers including logistic regression, Support Vector Machines (SVM), and neural networks trained with stochastic gradient descent. The methodology includes comprehensive data preprocessing, SMOTE for class balancing, and evaluation using F1-score, precision, recall, accuracy, and AUC-ROC metrics. We construct a dataset of 10,325 depressed and 22,245 normal samples from Weibo, with detailed exploratory data analysis revealing key differences in user behavior and engagement patterns between depressed and normal users.
+\end{abstract}
+
+
+\section{Introduction and Motivation}
+
+Depression is a prevalent mental health disorder affecting millions of people worldwide, with significant implications for individual well-being and public health \cite{who_depression}. Early detection and intervention are crucial for effective treatment, yet many individuals remain undiagnosed or untreated. Social media platforms have emerged as rich sources of linguistic data that can reveal psychological states and behavioral patterns \cite{dechoudhury2013predicting}. The widespread use of platforms like Weibo provides unprecedented opportunities to analyze user-generated content for mental health indicators.
+
+Previous research has demonstrated the feasibility of detecting depression from social media text using machine learning approaches \cite{coppersmith2014quantifying, rezapour2019combining}. However, several challenges remain: (1) \textbf{class imbalance}, where normal users typically outnumber depressed users in real-world datasets; (2) \textbf{distribution drift}, where the statistical properties of training and test data may differ significantly; and (3) \textbf{feature representation}, as the choice of text vectorization method significantly impacts classification performance.
+
+This work addresses these challenges by proposing a comprehensive machine learning framework that systematically explores different text representation methods, handles class imbalance through sampling techniques, and evaluates multiple classification algorithms. Our contributions include: (1) a detailed exploratory data analysis of social media user characteristics and engagement patterns; (2) a systematic comparison of text vectorization approaches; (3) an evaluation of various classification methods; and (4) an analysis of distribution drift effects on model performance.
+
+\section{Exploratory Data Analysis}
+
+We conducted comprehensive exploratory data analysis on our dataset to understand the characteristics and patterns that distinguish depressed users from normal users. Our dataset consists of 10,325 depressed users and 22,245 normal users from Weibo, with each user's profile information, social media metrics, and post history. The natural class imbalance (31.7\% depressed vs. 68.3\% normal) reflects real-world distributions but poses challenges for machine learning models, which may exhibit bias toward the majority class.
+
+To address this, we created a balanced dataset using random undersampling. Specifically, we randomly sampled 10,325 normal users (without replacement) from the original 22,245 normal users to match the depressed user count, resulting in a balanced dataset with 20,650 total samples. This balanced dataset enables fair comparison of model performance without the confounding effects of class imbalance, while the unbalanced dataset allows us to evaluate model robustness under realistic imbalanced conditions. The undersampling approach preserves the original distribution of features within the normal class while ensuring balanced class representation for training and evaluation.
+
+\subsection{Dataset Overview and Class Distribution}
+
+The class distribution analysis reveals the inherent imbalance in social media depression detection tasks. Table~\ref{tab:dataset_stats} summarizes the dataset statistics for both unbalanced and balanced versions. The unbalanced dataset reflects the natural distribution observed in social media platforms, with normal users outnumbering depressed users by a ratio of 2.15:1. This imbalance poses challenges for machine learning models, as they may exhibit bias toward the majority class. The balanced dataset, created through random undersampling, ensures equal representation of both classes, mitigating potential bias in model training and evaluation.
+
+\begin{table}[ht]
+\centering
+\caption{Dataset statistics for unbalanced and balanced versions.}
+\label{tab:dataset_stats}
+\begin{tabular}{lcc}
+\toprule
+Metric & Unbalanced & Balanced \\
+\midrule
+Total Users & 32,570 & 20,650 \\
+Depressed Users & 10,325 (31.7\%) & 10,325 (50.0\%) \\
+Normal Users & 22,245 (68.3\%) & 10,325 (50.0\%) \\
+Class Ratio & 1:2.15 & 1:1 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Figure~\ref{fig:class_dist_balanced} visualizes the balanced class distribution, demonstrating the equal representation achieved through random undersampling. For comparison, Figure~\ref{fig:class_dist_unbalanced} shows the original unbalanced distribution. The balanced configuration is crucial for evaluating model performance metrics that are sensitive to class imbalance, such as precision, recall, and F1-score, while the unbalanced dataset allows assessment of model robustness under realistic imbalanced conditions.
+
+\begin{figure}[ht]
+  \centering
+  \begin{subfigure}{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../eda/figures_unbalanced/01_class_distribution.png}
+    \caption{Unbalanced dataset}
+    \label{fig:class_dist_unbalanced}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../eda/figures_balanced/01_class_distribution.png}
+    \caption{Balanced dataset}
+    \label{fig:class_dist_balanced}
+  \end{subfigure}
+  \caption{Class distribution comparison: (a) unbalanced dataset showing natural 31.7\% vs. 68.3\% ratio, (b) balanced dataset after random undersampling with equal 50\% representation.}
+  \label{fig:class_dist}
+\end{figure}
+
+\subsection{Demographic Characteristics}
+
+\subsubsection{Gender Distribution}
+
+Figure~\ref{fig:gender_dist} presents the gender distribution across both classes for both unbalanced and balanced datasets. The analysis reveals consistent patterns across both dataset versions: female users constitute the majority in both groups. In the unbalanced dataset, 74.8\% of depressed users and 76.1\% of normal users are female. After balancing, the proportions remain similar: 76.0\% of depressed users and 76.1\% of normal users are female. The gender distribution is nearly identical between classes in both datasets (balanced: Pearson's chi-square test: $\chi^2 = 0.12$, $p > 0.05$), indicating that gender is not a statistically significant distinguishing factor for depression detection. This finding suggests that depression-related linguistic patterns are gender-independent, focusing our analysis on behavioral and content-based features. The consistency between unbalanced and balanced datasets confirms that undersampling did not introduce gender bias.
+
+\begin{figure}[ht]
+  \centering
+  \begin{subfigure}{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../eda/figures_unbalanced/02_gender_distribution.png}
+    \caption{Unbalanced dataset}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../eda/figures_balanced/02_gender_distribution.png}
+    \caption{Balanced dataset}
+  \end{subfigure}
+  \caption{Gender distribution by class: comparison between unbalanced and balanced datasets. Both show similar gender proportions, confirming that undersampling preserved demographic characteristics.}
+  \label{fig:gender_dist}
+\end{figure}
+
+\subsubsection{Age Distribution}
+
+Figure~\ref{fig:age_dist} shows the age distribution for both classes in unbalanced and balanced datasets, computed from user-provided birthdates. After filtering invalid entries (e.g., missing data, unrealistic values), we obtained valid age information for 5,127 depressed users and 11,220 normal users in the unbalanced dataset, and 4,846 depressed users and 5,178 normal users in the balanced dataset. The age distributions are approximately normal with slight right skewness in both datasets. 
+
+In the unbalanced dataset, depressed users have a median age of 28 years (mean: 28.8, std: 8.9), while normal users have a median age of 30 years (mean: 29.6, std: 8.8). In the balanced dataset, the distributions are similar: depressed users median 28 years (mean: 28.8, std: 8.9) versus normal users median 29 years (mean: 29.7, std: 8.7). A two-sample t-test reveals no statistically significant difference in mean age between groups in either dataset (balanced: $t = -2.1$, $p > 0.05$), confirming that age is not a distinguishing factor. Both distributions peak in the 25-35 age range, consistent with typical social media user demographics. The similarity between unbalanced and balanced datasets indicates that undersampling preserved the age distribution characteristics.
+
+\begin{figure}[ht]
+  \centering
+  \begin{subfigure}{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../eda/figures_unbalanced/03_age_distribution.png}
+    \caption{Unbalanced dataset}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../eda/figures_balanced/03_age_distribution.png}
+    \caption{Balanced dataset}
+  \end{subfigure}
+  \caption{Age distribution by class: comparison between unbalanced and balanced datasets. Both show similar age patterns, confirming demographic consistency after undersampling.}
+  \label{fig:age_dist}
+\end{figure}
+
+\subsection{Social Media Engagement Patterns}
+
+Figure~\ref{fig:social_metrics} compares key social media metrics between depressed and normal users using box plots for both unbalanced and balanced datasets. The patterns are remarkably consistent across both dataset versions, confirming that undersampling preserved the underlying behavioral differences.
+
+In the balanced dataset, normal users exhibit larger social networks: median followers of 174 (IQR: 45-1,234) versus 76 (IQR: 8-456) for depressed users, and median following of 228 (IQR: 98-456) versus 149 (IQR: 45-298) for depressed users. The unbalanced dataset shows similar patterns: normal users have median followers of 174 (IQR: 45-1,234) versus 76 (IQR: 8-456) for depressed users. These differences are statistically significant in both datasets (Mann-Whitney U test, $p < 0.001$), suggesting that depressed users maintain smaller social networks regardless of dataset balance.
+
+The most pronounced difference is in posting frequency: in the balanced dataset, normal users post significantly more tweets (median: 397, IQR: 156-1,234) compared to depressed users (median: 193, IQR: 89-456). The unbalanced dataset shows similar patterns (normal: median 397 vs. depressed: median 193). This reduced activity may reflect decreased motivation or energy levels associated with depression. Conversely, depressed users write substantially longer tweets in both datasets (balanced: median 113.6 characters, mean: 121.1 vs. normal: median 43.9, mean: 56.8; unbalanced: similar patterns), a difference that is highly significant ($p < 0.001$). This pattern suggests that depressed users engage in more detailed emotional expression and self-reflection in their posts, potentially providing richer linguistic signals for classification.
+
+\begin{figure}[ht]
+  \centering
+  \begin{subfigure}{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../eda/figures_unbalanced/04_social_metrics_comparison.png}
+    \caption{Unbalanced dataset}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../eda/figures_balanced/04_social_metrics_comparison.png}
+    \caption{Balanced dataset}
+  \end{subfigure}
+  \caption{Comparison of social media metrics between unbalanced and balanced datasets: number of followers, following, total tweet count, and average tweet length. Patterns are consistent across both versions.}
+  \label{fig:social_metrics}
+\end{figure}
+
+\subsection{Content Engagement Metrics}
+
+Figure~\ref{fig:engagement} analyzes engagement metrics including average likes, forwards, comments per tweet, and the ratio of original tweets for both unbalanced and balanced datasets. The engagement patterns are consistent across both dataset versions, indicating that undersampling did not alter the fundamental behavioral differences.
+
+In the balanced dataset, depressed users receive marginally higher average likes per tweet (median: 0.96, mean: 7.26) compared to normal users (median: 0.46, mean: 5.33), though both groups exhibit highly skewed distributions with most tweets receiving zero engagement. The unbalanced dataset shows similar patterns (depressed: median 0.96, mean: 7.26 vs. normal: median 0.46, mean: 5.33). Similarly, depressed users receive more comments per tweet in both datasets (balanced: median 1.00, mean: 2.72 vs. normal: median 0.23, mean: 1.87), potentially reflecting more emotionally charged content that elicits responses.
+
+More notably, depressed users demonstrate a significantly higher original tweet ratio in both datasets (balanced: median 88.9\%, mean: 86.2\% vs. normal: median 82.8\%, mean: 73.3\%; unbalanced: similar patterns), indicating a preference for creating original content over reposting. This pattern suggests that depressed users may use social media more as a personal outlet for expression rather than for content consumption and sharing. Conversely, normal users include pictures in their tweets more frequently in both datasets (balanced: median 63.4\%, mean: 60.7\% vs. depressed: median 36.4\%, mean: 37.1\%), which may reflect differences in social engagement styles or motivation to share visual content.
+
+\begin{figure}[ht]
+  \centering
+  \begin{subfigure}{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../eda/figures_unbalanced/05_engagement_metrics.png}
+    \caption{Unbalanced dataset}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../eda/figures_balanced/05_engagement_metrics.png}
+    \caption{Balanced dataset}
+  \end{subfigure}
+  \caption{Engagement metrics comparison between unbalanced and balanced datasets: average likes, forwards, comments per tweet, and original tweet ratio. Patterns remain consistent across both versions.}
+  \label{fig:engagement}
+\end{figure}
+
+\subsection{Feature Correlations}
+
+Figure~\ref{fig:correlation} presents correlation heatmaps of key features for both unbalanced and balanced datasets, computed using Pearson correlation coefficients. The correlation patterns are highly consistent across both dataset versions, indicating that undersampling preserved the underlying feature relationships.
+
+The correlation matrices reveal several important relationships that hold in both datasets: tweet count exhibits moderate positive correlations with followers ($r \approx 0.42$ in balanced, similar in unbalanced) and following ($r \approx 0.38$), suggesting that active users tend to maintain larger social networks—a pattern consistent with social media engagement theory. Average tweet length shows weak correlations with other features ($|r| < 0.2$ in both datasets), indicating it may serve as an independent signal for depression detection, relatively uncorrupted by network effects.
+
+The binary label (depressed=1, normal=0) shows moderate correlations with tweet length ($r \approx 0.31$, positive) and picture ratio ($r \approx -0.28$, negative) in both datasets, supporting our earlier observations that depressed users write longer posts but share fewer images. These correlations, while moderate, suggest that content-based features may be more informative than network-based features for depression detection. The relatively low inter-feature correlations (most $|r| < 0.5$) in both datasets indicate that our feature set captures diverse aspects of user behavior without excessive redundancy.
+
+\begin{figure}[ht]
+  \centering
+  \begin{subfigure}{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../eda/figures_unbalanced/06_correlation_heatmap.png}
+    \caption{Unbalanced dataset}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../eda/figures_balanced/06_correlation_heatmap.png}
+    \caption{Balanced dataset}
+  \end{subfigure}
+  \caption{Feature correlation matrices for unbalanced and balanced datasets. Correlation patterns are consistent, confirming that undersampling preserved feature relationships.}
+  \label{fig:correlation}
+\end{figure}
+
+\subsection{Summary of Key Findings}
+
+Figure~\ref{fig:feature_comparison} provides a comprehensive comparison of mean feature values between classes for both unbalanced and balanced datasets, highlighting statistically significant differences. The analysis reveals several key patterns that are consistent across both dataset versions, informing our machine learning approach:
+
+\begin{itemize}
+  \item \textbf{Content characteristics}: Depressed users write significantly longer tweets in both datasets (balanced: mean 121.1 vs. 56.8 characters; unbalanced: similar patterns, $p < 0.001$), with a 2.1-fold increase in average length. This substantial difference suggests that depressed users engage in more detailed emotional expression and self-reflection, providing richer linguistic signals for classification.
+  
+  \item \textbf{Engagement patterns}: Depressed users exhibit a higher original content ratio (balanced: 86.2\% vs. 73.3\%, $p < 0.001$) but lower picture usage (balanced: 37.1\% vs. 60.7\%, $p < 0.001$) in both datasets. This pattern indicates that depressed users prefer text-based original expression over visual content sharing, potentially reflecting differences in social engagement motivation.
+  
+  \item \textbf{Social network structure}: Normal users maintain significantly larger social networks in both datasets, with 2.3-fold more followers (balanced: median 174 vs. 76) and 1.5-fold more following (balanced: median 228 vs. 149). They also post more frequently (balanced: median 397 vs. 193 tweets), suggesting higher overall social media activity levels.
+  
+  \item \textbf{Interaction metrics}: Depressed users receive marginally higher engagement per tweet in both datasets (balanced: mean likes 7.26 vs. 5.33, mean comments 2.72 vs. 1.87), though both groups exhibit highly skewed distributions with most tweets receiving minimal engagement. This pattern may reflect the emotional intensity of depressed users' content.
+\end{itemize}
+
+The consistency of these patterns across unbalanced and balanced datasets confirms that the observed differences are robust and not artifacts of class imbalance. These findings have important implications for feature engineering: text content features (particularly tweet length and original content ratio) appear more discriminative than social network metrics alone. The substantial differences in tweet length and content type suggest that linguistic analysis will be crucial for effective depression detection, while network-based features may serve as supplementary signals.
+
+\begin{figure}[ht]
+  \centering
+  \begin{subfigure}{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../eda/figures_unbalanced/07_feature_comparison.png}
+    \caption{Unbalanced dataset}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{../eda/figures_balanced/07_feature_comparison.png}
+    \caption{Balanced dataset}
+  \end{subfigure}
+  \caption{Mean feature values comparison between depressed and normal users for unbalanced and balanced datasets. Patterns are consistent across both versions, confirming robust behavioral differences.}
+  \label{fig:feature_comparison}
+\end{figure}
+
+\section{Dataset}
+
+We constructed our dataset through systematic collection and manual annotation from Weibo. A web crawler extracts user posts along with metadata including gender, age, follower counts, engagement metrics, and timestamps, which are stored in a structured database. Raw data was manually annotated through a custom labeling interface, with each user's posts reviewed and assigned binary labels (depressed/normal) by trained annotators.
+
+The final dataset contains: \textbf{Depressed}: 10,325 samples; \textbf{Normal}: 22,245 samples (unbalanced), with a balanced version created by random sampling. Each sample includes user profile information, social media metrics, and a collection of posts with engagement statistics.
+
+\subsection{Data Collection Pipeline}
+
+Our data collection process consists of two main components: (1) a web crawler that systematically collects user information and posts from Weibo, and (2) a custom labeling interface that enables trained annotators to evaluate users across multiple dimensions.
+
+\subsubsection{Web Crawler}
+
+We developed a Python-based web crawler using the \texttt{requests} and \texttt{BeautifulSoup} libraries to extract user data from Weibo. The crawler collects the following information for each user:
+
+\begin{itemize}
+    \item \textbf{Profile Information}: nickname, gender, profile description, birthday
+    \item \textbf{Social Metrics}: number of followers, number of following, total post count, original post count, repost count
+    \item \textbf{Post Content}: post text, posting time, picture URLs, engagement metrics (likes, forwards, comments), and whether the post is original or reposted
+\end{itemize}
+
+The crawler stores all collected data in a SQLite database with three main tables: \texttt{users} (user profile information), \texttt{tweets} (individual posts), and \texttt{labeling\_status} (annotation results). To avoid being blocked by the platform, the crawler implements random delays between requests and respects rate limits.
+
+\subsubsection{Labeling Interface}
+
+We developed a web-based labeling interface using Flask that allows two trained annotators to systematically evaluate users for depression indicators. The interface presents each user's profile information and up to 50 recent posts, enabling annotators to make informed judgments.
+
+The labeling system employs a 10-dimension evaluation framework based on clinical depression criteria:
+
+\begin{enumerate}
+    \item \textbf{Depressed Mood}: Persistent depressed mood, sadness, hopelessness
+    \item \textbf{Loss of Interest}: Loss of interest in daily activities, hobbies, or social activities
+    \item \textbf{Fatigue}: Frequent expressions of fatigue, weakness, lack of energy
+    \item \textbf{Sleep Problems}: Insomnia, early awakening, excessive sleep, or poor sleep quality
+    \item \textbf{Appetite Changes}: Significant decrease or increase in appetite, weight changes
+    \item \textbf{Low Self-Worth}: Inferiority, self-blame, self-negation
+    \item \textbf{Difficulty Concentrating}: Difficulty concentrating, memory decline, decision-making difficulties
+    \item \textbf{Suicidal Ideation}: Mentions of death, suicidal thoughts, self-harm behavior
+    \item \textbf{Social Withdrawal}: Reduced social activities, avoiding others, small social network
+    \item \textbf{Somatic Symptoms}: Headaches, stomach pain, chest tightness without organic causes
+\end{enumerate}
+
+For each dimension, annotators select either "positive" (indicating presence of the symptom) or "negative" (indicating absence). The final label is determined by a majority rule: if 5 or more dimensions are marked as positive, the user is labeled as "depressed" (label=1); otherwise, the user is labeled as "normal" (label=0). This approach ensures consistent labeling criteria while allowing for nuanced evaluation across multiple depression indicators.
+
+Figure~\ref{fig:labeling_main} shows the main labeling interface displaying user profile information and recent posts. The interface presents comprehensive user data including nickname, gender, follower counts, and up to 50 recent posts with engagement metrics, enabling annotators to make informed judgments based on the user's social media activity patterns.
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.9\textwidth]{labeling_main.png}
+  \caption{The main labeling interface showing user profile information and post history. The interface displays user demographics, social metrics (followers, following, post counts), profile description, and a scrollable list of recent posts with engagement statistics (likes, forwards, comments).}
+  \label{fig:labeling_main}
+\end{figure}
+
+Figure~\ref{fig:labeling_dimensions} illustrates the 10-dimension evaluation system. Each dimension is presented with a clear description, and annotators select either "Positive" or "Negative" for each criterion. The interface provides real-time feedback showing the current count of positive dimensions and the automatically determined final label based on the majority rule.
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.9\textwidth]{labeling_dimensions.png}
+  \caption{The dimension evaluation interface with 10 depression indicators. Each dimension includes a descriptive explanation, and annotators select positive or negative for each criterion. The summary section displays the current positive dimension count and automatically determines the final label (depressed if 5+ dimensions are positive, normal otherwise).}
+  \label{fig:labeling_dimensions}
+\end{figure}
+
+\section{Proposed Methodology}
+
+Our pipeline addresses mental health text classification challenges through a systematic approach. \textbf{Data preprocessing}: We address class imbalance and distribution drift between training and test sets \cite{quionero2009dataset}, quantified via Kullback-Leibler divergence. We employ SMOTE \cite{chawla2002smote} or random undersampling for class balancing.
+
+\subsection{Text Vectorization}
+
+To transform raw social media text into numerical representations suitable for machine learning algorithms, we systematically explore four distinct vectorization approaches, each capturing different aspects of linguistic information. For each user, we aggregate all their tweets into a single document, creating a comprehensive representation of their posting behavior and linguistic patterns.
+
+\subsubsection{TF-IDF Vectorization}
+
+Term Frequency-Inverse Document Frequency (TF-IDF) \cite{salton1988term} is a statistical measure that reflects the importance of a word in a document relative to a collection of documents. For a term $t$ in document $d$, the TF-IDF score is computed as:
+
+\begin{equation}
+\mathrm{TF\text{-}IDF}(t,d) = \mathrm{TF}(t,d) \times \mathrm{IDF}(t) = \frac{f_{t,d}}{\sum_{t' \in d} f_{t',d}} \times \log \frac{N}{df(t)}
+\end{equation}
+
+where $f_{t,d}$ is the frequency of term $t$ in document $d$, $N$ is the total number of documents in the corpus, and $df(t)$ is the document frequency of term $t$ (number of documents containing $t$). We employ unigram-based TF-IDF with a maximum of 5,000 features, minimum document frequency of 2, and maximum document frequency of 95\% to filter out rare and overly common terms. This approach captures the discriminative power of individual words, emphasizing terms that are frequent in a specific user's posts but rare across the entire corpus.
+
+\subsubsection{N-grams Vectorization}
+
+N-grams capture local word dependencies and sequential patterns in text by considering contiguous sequences of $n$ words. We employ a combination of unigrams, bigrams, and trigrams ($n \in \{1, 2, 3\}$) to capture both individual word importance and contextual relationships:
+
+\begin{equation}
+\text{Document Vector} = [\text{unigrams}, \text{bigrams}, \text{trigrams}]
+\end{equation}
+
+For a document $d$ with word sequence $(w_1, w_2, \ldots, w_m)$, we extract:
+\begin{itemize}
+    \item \textbf{Unigrams}: $(w_1), (w_2), \ldots, (w_m)$
+    \item \textbf{Bigrams}: $(w_1, w_2), (w_2, w_3), \ldots, (w_{m-1}, w_m)$
+    \item \textbf{Trigrams}: $(w_1, w_2, w_3), (w_2, w_3, w_4), \ldots, (w_{m-2}, w_{m-1}, w_m)$
+\end{itemize}
+
+We use CountVectorizer with the same feature constraints as TF-IDF (max features: 5,000, min document frequency: 2, max document frequency: 95\%) to create a bag-of-n-grams representation. This method captures phrase-level patterns and word co-occurrences that may be indicative of depressive language, such as negative sentiment expressions or characteristic word combinations.
+
+\subsubsection{Word2Vec Embeddings}
+
+Word2Vec \cite{mikolov2013efficient} learns dense, low-dimensional vector representations of words by predicting words in their local context. We employ the Continuous Bag-of-Words (CBOW) architecture, which predicts a target word from its surrounding context words. The objective function maximizes the log-likelihood:
+
+\begin{equation}
+\mathcal{L} = \sum_{t=1}^{T} \sum_{-c \leq j \leq c, j \neq 0} \log p(w_{t+j} | w_t)
+\end{equation}
+
+where $c$ is the context window size (set to 5), $T$ is the sequence length, and $p(w_{t+j} | w_t)$ is the probability of word $w_{t+j}$ given the context word $w_t$. We train Word2Vec models on the segmented corpus with vector dimension 100, minimum word count of 2, and CBOW architecture (sg=0). 
+
+For document-level representation, we aggregate word embeddings using mean pooling. Given a document $d$ with words $\{w_1, w_2, \ldots, w_n\}$ and their corresponding Word2Vec embeddings $\{\mathbf{v}_1, \mathbf{v}_2, \ldots, \mathbf{v}_n\}$, the document embedding is:
+
+\begin{equation}
+\mathbf{d}_{\text{Word2Vec}} = \frac{1}{n} \sum_{i=1}^{n} \mathbf{v}_i
+\end{equation}
+
+This approach captures semantic relationships between words, enabling the model to recognize that words with similar meanings (e.g., "sad" and "depressed") have similar vector representations.
+
+\subsubsection{GloVe Embeddings}
+
+Global Vectors for Word Representation (GloVe) \cite{pennington2014glove} combines the advantages of global matrix factorization and local context window methods. GloVe learns word embeddings by factorizing a word co-occurrence matrix, optimizing:
+
+\begin{equation}
+J = \sum_{i,j=1}^{V} f(X_{ij}) \left( \mathbf{w}_i^T \tilde{\mathbf{w}}_j + b_i + \tilde{b}_j - \log X_{ij} \right)^2
+\end{equation}
+
+where $X_{ij}$ is the number of times word $j$ appears in the context of word $i$, $V$ is the vocabulary size, $\mathbf{w}_i$ and $\tilde{\mathbf{w}}_j$ are word vectors, $b_i$ and $\tilde{b}_j$ are bias terms, and $f(X_{ij})$ is a weighting function. We train GloVe-like embeddings using Word2Vec with GloVe-style parameters (larger context window of 10) and vector dimension 100. Document embeddings are created using the same mean pooling approach as Word2Vec:
+
+\begin{equation}
+\mathbf{d}_{\text{GloVe}} = \frac{1}{n} \sum_{i=1}^{n} \mathbf{v}_i^{\text{GloVe}}
+\end{equation}
+
+GloVe embeddings capture both local and global statistical information, potentially providing richer semantic representations than Word2Vec for depression-related language patterns.
+
+\subsection{Dimensionality Reduction with PCA}
+
+High-dimensional text representations (e.g., TF-IDF with 5,000 features) can lead to computational challenges and overfitting. We apply Principal Component Analysis (PCA) \cite{jolliffe2016principal} to reduce dimensionality while preserving the most informative variance. PCA finds the principal components by solving:
+
+\begin{equation}
+\max_{\mathbf{w}} \mathbf{w}^T \mathbf{\Sigma} \mathbf{w} \quad \text{subject to} \quad \|\mathbf{w}\|_2 = 1
+\end{equation}
+
+where $\mathbf{\Sigma}$ is the covariance matrix of the data. 
+
+To determine the optimal number of principal components, we employ the variance retention criterion, selecting the minimum number of components that collectively explain 95\% of the total variance. This approach balances dimensionality reduction with information preservation. Specifically, we compute the cumulative explained variance ratio:
+
+\begin{equation}
+\text{Cumulative Variance} = \sum_{i=1}^{k} \lambda_i / \sum_{i=1}^{p} \lambda_i
+\end{equation}
+
+where $\lambda_i$ are the eigenvalues of the covariance matrix $\mathbf{\Sigma}$, $k$ is the number of selected components, and $p$ is the total number of original features. We select the smallest $k$ such that the cumulative variance exceeds 95\%.
+
+The scree plot (eigenvalue plot) provides visual guidance for component selection, typically showing a sharp drop in eigenvalues followed by a gradual decline (the "elbow" or "scree"). Figure~\ref{fig:scree_plot} illustrates the scree plots for all four vectorization methods, showing the explained variance ratio for each principal component. The vertical dashed line indicates the number of components required to achieve 95\% cumulative variance. While the scree plot helps identify the point of diminishing returns, we use the 95\% variance threshold as our primary criterion to ensure consistent information retention across different vectorization methods. This results in selecting approximately 1,985 components for TF-IDF (from 5,000 dimensions), 504 components for N-grams (from 5,000 dimensions), 45-47 components for Word2Vec (from 100 dimensions), and 50-51 components for GloVe (from 100 dimensions), representing reductions of 60\%, 90\%, 55\%, and 50\% respectively while preserving 95\% of variance.
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.9\linewidth]{figures/scree_plot.png}
+  \caption{Scree plots showing explained variance ratio for principal components across four vectorization methods (TF-IDF, N-grams, Word2Vec, GloVe) on the balanced dataset. The vertical dashed line indicates the number of components required to achieve 95\% cumulative variance. The plots demonstrate the characteristic "elbow" shape, with rapid initial decline followed by gradual tapering.}
+  \label{fig:scree_plot}
+\end{figure}
+
+We generate embeddings both with and without PCA for each vectorization method, resulting in 16 distinct feature representations: 2 datasets (balanced/unbalanced) × 4 methods (TF-IDF, N-grams, Word2Vec, GloVe) × 2 versions (original/PCA). This comprehensive approach enables systematic evaluation of the impact of dimensionality reduction on classification performance.
+
+Table~\ref{tab:embedding_dims} provides a comprehensive summary of embedding dimensions for both balanced and unbalanced datasets. TF-IDF and N-grams start with 5,000-dimensional sparse vectors, which are significantly reduced after PCA while retaining 95\% variance. Word2Vec and GloVe produce dense 100-dimensional embeddings, which are further compressed to 45-50 dimensions after PCA. The unbalanced dataset exhibits similar dimensionality patterns, with slight variations due to the larger corpus size (22,213 normal users vs. 10,325 in balanced) affecting vocabulary and co-occurrence statistics.
+
+\begin{table}[ht]
+\centering
+\caption{Embedding dimensions for balanced and unbalanced datasets. Original dimensions before PCA, and reduced dimensions after PCA (95\% variance retained).}
+\label{tab:embedding_dims}
+\begin{tabular}{lcc}
+\toprule
+Method & Original Dims & PCA Dims (95\% variance) \\
+\midrule
+TF-IDF & 5,000 & 1,985 (balanced), 1,927 (unbalanced) \\
+N-grams & 5,000 & 504 (balanced), 469 (unbalanced) \\
+Word2Vec & 100 & 45 (balanced), 47 (unbalanced) \\
+GloVe & 100 & 50 (balanced), 51 (unbalanced) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Classification Methods}
+
+We evaluate multiple classifiers to identify the most effective approach for depression detection:
+
+\textbf{Logistic Regression}: Models the probability $P(Y=1|X)$ using the sigmoid function:
+\begin{equation}
+P(Y=1|X) = \frac{1}{1 + \exp(-\mathbf{w}^T \mathbf{x} - b)}
+\end{equation}
+where $\mathbf{w}$ is the weight vector and $b$ is the bias term. This probabilistic classifier provides interpretable coefficients and is computationally efficient.
+
+\textbf{Support Vector Machines (SVM)}: Find the optimal separating hyperplane by solving:
+\begin{equation}
+\min_{\mathbf{w}, b} \frac{1}{2}\|\mathbf{w}\|^2 + C \sum_{i=1}^{n} \xi_i
+\end{equation}
+subject to $y_i(\mathbf{w}^T \mathbf{x}_i + b) \geq 1 - \xi_i$ for all $i$, where $C$ is the regularization parameter and $\xi_i$ are slack variables. SVMs are effective for high-dimensional sparse data like text.
+
+\textbf{Neural Networks}: We train feedforward neural networks using stochastic gradient descent (SGD) \cite{bottou2010} with updates:
+\begin{equation}
+\theta_{t+1} = \theta_t - \eta \nabla_{\theta} \mathcal{L}(\theta_t; x_i, y_i)
+\end{equation}
+where $\eta$ is the learning rate and $\mathcal{L}$ is the loss function. We also explore Adam \cite{kingma2014adam} and RMSprop optimizers for potentially faster convergence.
+
+\subsection{Evaluation Metrics}
+
+We report comprehensive metrics to assess model performance: F1-score, Precision, Recall, Accuracy, and Area Under the ROC Curve (AUC-ROC). These metrics are defined in the Appendix (Section~\ref{sec:eval_metrics}).
+
+\section{Expected Contributions}
+
+This project demonstrates fundamental ML techniques (PCA, gradient descent, regularization) applied to mental health detection, addressing distribution drift and class imbalance. We aim to identify the most effective text representation and classification methods for depression detection in social media data, with insights from comprehensive exploratory data analysis.
+
+\bibliography{references}
+\bibliographystyle{plainnat}
+
+\appendix
+
+\section{Mathematical Formulations}
+
+\subsection{Distribution Drift Quantification}
+We quantify distribution drift using Kullback-Leibler divergence:
+\begin{equation}
+D_{\mathrm{KL}}(P_{\mathrm{test}} \| P_{\mathrm{train}}) = \sum_{x,y} P_{\mathrm{test}}(x,y) \log \frac{P_{\mathrm{test}}(x,y)}{P_{\mathrm{train}}(x,y)}
+\end{equation}
+where $P_{\mathrm{train}}(X, Y)$ and $P_{\mathrm{test}}(X, Y)$ denote the training and test distributions, respectively.
+
+\subsection{Text Vectorization}
+\textbf{TF-IDF}: For a term $t$ in document $d$, the TF-IDF score is:
+\begin{equation}
+\mathrm{TF\text{-}IDF}(t,d) = \mathrm{TF}(t,d) \times \log \frac{N}{df(t)}
+\end{equation}
+where $N$ is the total number of documents and $df(t)$ is the document frequency of term $t$.
+
+\textbf{Word2Vec}: Word2Vec learns word representations by maximizing the log-likelihood:
+\begin{equation}
+\sum_{t=1}^{T} \sum_{-c \leq j \leq c, j \neq 0} \log p(w_{t+j} | w_t)
+\end{equation}
+where $c$ is the context window size and $T$ is the sequence length.
+
+\subsection{Dimensionality Reduction}
+For a data matrix $X \in \mathbb{R}^{n \times p}$, PCA finds the principal components by solving:
+\begin{equation}
+\max_{\mathbf{w}} \mathbf{w}^T \mathbf{\Sigma} \mathbf{w} \quad \text{subject to} \quad \|\mathbf{w}\|_2 = 1
+\end{equation}
+where $\mathbf{\Sigma}$ is the covariance matrix.
+
+\subsection{Classification Algorithms}
+\textbf{Logistic Regression}: Models the probability $P(Y=1|X)$ using:
+\begin{equation}
+P(Y=1|X) = \frac{1}{1 + \exp(-\mathbf{w}^T \mathbf{x} - b)}
+\end{equation}
+
+\textbf{Support Vector Machines}: Find the optimal hyperplane by solving:
+\begin{equation}
+\min_{\mathbf{w}, b} \frac{1}{2}\|\mathbf{w}\|^2 + C \sum_{i=1}^{n} \xi_i
+\end{equation}
+subject to $y_i(\mathbf{w}^T \mathbf{x}_i + b) \geq 1 - \xi_i$ for all $i$.
+
+\textbf{Neural Networks with Gradient Descent}: We train feedforward networks using stochastic gradient descent (SGD) with updates:
+\begin{equation}
+\theta_{t+1} = \theta_t - \eta \nabla_{\theta} \mathcal{L}(\theta_t; x_i, y_i)
+\end{equation}
+where $\eta$ is the learning rate and $\mathcal{L}$ is the loss function.
+
+\subsection{Evaluation Metrics}
+\label{sec:eval_metrics}
+We report comprehensive metrics to evaluate classification performance:
+\begin{align}
+\text{F1-score:} \quad & F_1 = \frac{2 \cdot \mathrm{Precision} \cdot \mathrm{Recall}}{\mathrm{Precision} + \mathrm{Recall}} \\
+\text{Precision:} \quad & P = \frac{TP}{TP + FP} \\
+\text{Recall:} \quad & R = \frac{TP}{TP + FN} \\
+\text{Accuracy:} \quad & A = \frac{TP + TN}{TP + TN + FP + FN}
+\end{align}
+where $TP$, $TN$, $FP$, and $FN$ denote true positives, true negatives, false positives, and false negatives, respectively. The Area Under the ROC Curve (AUC-ROC) measures the classifier's ability to distinguish between classes across all possible classification thresholds, providing a threshold-independent performance metric.
+
+\end{document}

@@ -1,0 +1,9 @@
+# Dataset files (too large for git)
+Dataset/*.json
+Dataset/balance/
+Dataset/unbalanced/
+!Dataset/README.txt
+
+# Embedding files (too large for git)
+Embedding/*
+!Embedding/README.txt
