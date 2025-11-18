@@ -103,7 +103,7 @@ Class Ratio & 1:2.15 & 1:1 \\
 
 Figure~\ref{fig:class_dist_balanced} visualizes the balanced class distribution, demonstrating the equal representation achieved through random undersampling. For comparison, Figure~\ref{fig:class_dist_unbalanced} shows the original unbalanced distribution. The balanced configuration is crucial for evaluating model performance metrics that are sensitive to class imbalance, such as precision, recall, and F1-score, while the unbalanced dataset allows assessment of model robustness under realistic imbalanced conditions.
 
-\begin{figure}[ht]
+\begin{figure}[t]
   \centering
   \begin{subfigure}{0.48\textwidth}
     \centering
@@ -128,7 +128,7 @@ Figure~\ref{fig:class_dist_balanced} visualizes the balanced class distribution,
 
 Figure~\ref{fig:gender_dist} presents the gender distribution across both classes for both unbalanced and balanced datasets. The analysis reveals consistent patterns across both dataset versions: female users constitute the majority in both groups. In the unbalanced dataset, 74.8\% of depressed users and 76.1\% of normal users are female. After balancing, the proportions remain similar: 76.0\% of depressed users and 76.1\% of normal users are female. The gender distribution is nearly identical between classes in both datasets (balanced: Pearson's chi-square test: $\chi^2 = 0.12$, $p > 0.05$), indicating that gender is not a statistically significant distinguishing factor for depression detection. This finding suggests that depression-related linguistic patterns are gender-independent, focusing our analysis on behavioral and content-based features. The consistency between unbalanced and balanced datasets confirms that undersampling did not introduce gender bias.
 
-\begin{figure}[ht]
+\begin{figure}[t]
   \centering
   \begin{subfigure}{0.48\textwidth}
     \centering
@@ -151,7 +151,7 @@ Figure~\ref{fig:age_dist} shows the age distribution for both classes in unbalan
 
 In the unbalanced dataset, depressed users have a median age of 28 years (mean: 28.8, std: 8.9), while normal users have a median age of 30 years (mean: 29.6, std: 8.8). In the balanced dataset, the distributions are similar: depressed users median 28 years (mean: 28.8, std: 8.9) versus normal users median 29 years (mean: 29.7, std: 8.7). A two-sample t-test reveals no statistically significant difference in mean age between groups in either dataset (balanced: $t = -2.1$, $p > 0.05$), confirming that age is not a distinguishing factor. Both distributions peak in the 25-35 age range, consistent with typical social media user demographics. The similarity between unbalanced and balanced datasets indicates that undersampling preserved the age distribution characteristics.
 
-\begin{figure}[ht]
+\begin{figure}[t]
   \centering
   \begin{subfigure}{0.48\textwidth}
     \centering
@@ -176,7 +176,7 @@ In the balanced dataset, normal users exhibit larger social networks: median fol
 
 The most pronounced difference is in posting frequency: in the balanced dataset, normal users post significantly more tweets (median: 397, IQR: 156-1,234) compared to depressed users (median: 193, IQR: 89-456). The unbalanced dataset shows similar patterns (normal: median 397 vs. depressed: median 193). This reduced activity may reflect decreased motivation or energy levels associated with depression. Conversely, depressed users write substantially longer tweets in both datasets (balanced: median 113.6 characters, mean: 121.1 vs. normal: median 43.9, mean: 56.8; unbalanced: similar patterns), a difference that is highly significant ($p < 0.001$). This pattern suggests that depressed users engage in more detailed emotional expression and self-reflection in their posts, potentially providing richer linguistic signals for classification.
 
-\begin{figure}[ht]
+\begin{figure}[t]
   \centering
   \begin{subfigure}{0.48\textwidth}
     \centering
@@ -201,7 +201,7 @@ In the balanced dataset, depressed users receive marginally higher average likes
 
 More notably, depressed users demonstrate a significantly higher original tweet ratio in both datasets (balanced: median 88.9\%, mean: 86.2\% vs. normal: median 82.8\%, mean: 73.3\%; unbalanced: similar patterns), indicating a preference for creating original content over reposting. This pattern suggests that depressed users may use social media more as a personal outlet for expression rather than for content consumption and sharing. Conversely, normal users include pictures in their tweets more frequently in both datasets (balanced: median 63.4\%, mean: 60.7\% vs. depressed: median 36.4\%, mean: 37.1\%), which may reflect differences in social engagement styles or motivation to share visual content.
 
-\begin{figure}[ht]
+\begin{figure}[t]
   \centering
   \begin{subfigure}{0.48\textwidth}
     \centering
@@ -226,7 +226,7 @@ The correlation matrices reveal several important relationships that hold in bot
 
 The binary label (depressed=1, normal=0) shows moderate correlations with tweet length ($r \approx 0.31$, positive) and picture ratio ($r \approx -0.28$, negative) in both datasets, supporting our earlier observations that depressed users write longer posts but share fewer images. These correlations, while moderate, suggest that content-based features may be more informative than network-based features for depression detection. The relatively low inter-feature correlations (most $|r| < 0.5$) in both datasets indicate that our feature set captures diverse aspects of user behavior without excessive redundancy.
 
-\begin{figure}[ht]
+\begin{figure}[t]
   \centering
   \begin{subfigure}{0.48\textwidth}
     \centering
@@ -259,7 +259,7 @@ Figure~\ref{fig:feature_comparison} provides a comprehensive comparison of mean 
 
 The consistency of these patterns across unbalanced and balanced datasets confirms that the observed differences are robust and not artifacts of class imbalance. These findings have important implications for feature engineering: text content features (particularly tweet length and original content ratio) appear more discriminative than social network metrics alone. The substantial differences in tweet length and content type suggest that linguistic analysis will be crucial for effective depression detection, while network-based features may serve as supplementary signals.
 
-\begin{figure}[ht]
+\begin{figure}[t]
   \centering
   \begin{subfigure}{0.48\textwidth}
     \centering
@@ -323,7 +323,7 @@ For each dimension, annotators select either "positive" (indicating presence of 
 
 Figure~\ref{fig:labeling_main} shows the main labeling interface displaying user profile information and recent posts. The interface presents comprehensive user data including nickname, gender, follower counts, and up to 50 recent posts with engagement metrics, enabling annotators to make informed judgments based on the user's social media activity patterns.
 
-\begin{figure}[ht]
+\begin{figure}[t]
   \centering
   \includegraphics[width=0.9\textwidth]{labeling_main.png}
   \caption{The main labeling interface showing user profile information and post history. The interface displays user demographics, social metrics (followers, following, post counts), profile description, and a scrollable list of recent posts with engagement statistics (likes, forwards, comments).}
@@ -332,7 +332,7 @@ Figure~\ref{fig:labeling_main} shows the main labeling interface displaying user
 
 Figure~\ref{fig:labeling_dimensions} illustrates the 10-dimension evaluation system. Each dimension is presented with a clear description, and annotators select either "Positive" or "Negative" for each criterion. The interface provides real-time feedback showing the current count of positive dimensions and the automatically determined final label based on the majority rule.
 
-\begin{figure}[ht]
+\begin{figure}[t]
   \centering
   \includegraphics[width=0.9\textwidth]{labeling_dimensions.png}
   \caption{The dimension evaluation interface with 10 depression indicators. Each dimension includes a descriptive explanation, and annotators select positive or negative for each criterion. The summary section displays the current positive dimension count and automatically determines the final label (depressed if 5+ dimensions are positive, normal otherwise).}
@@ -428,7 +428,7 @@ where $\lambda_i$ are the eigenvalues of the covariance matrix $\mathbf{\Sigma}$
 
 The scree plot (eigenvalue plot) provides visual guidance for component selection, typically showing a sharp drop in eigenvalues followed by a gradual decline (the "elbow" or "scree"). Figure~\ref{fig:scree_plot} illustrates the scree plots for all four vectorization methods, showing the explained variance ratio for each principal component. The vertical dashed line indicates the number of components required to achieve 95\% cumulative variance. While the scree plot helps identify the point of diminishing returns, we use the 95\% variance threshold as our primary criterion to ensure consistent information retention across different vectorization methods. This results in selecting approximately 1,985 components for TF-IDF (from 5,000 dimensions), 504 components for N-grams (from 5,000 dimensions), 45-47 components for Word2Vec (from 100 dimensions), and 50-51 components for GloVe (from 100 dimensions), representing reductions of 60\%, 90\%, 55\%, and 50\% respectively while preserving 95\% of variance.
 
-\begin{figure}[ht]
+\begin{figure}[t]
   \centering
   \includegraphics[width=0.9\linewidth]{figures/scree_plot.png}
   \caption{Scree plots showing explained variance ratio for principal components across four vectorization methods (TF-IDF, N-grams, Word2Vec, GloVe) on the balanced dataset. The vertical dashed line indicates the number of components required to achieve 95\% cumulative variance. The plots demonstrate the characteristic "elbow" shape, with rapid initial decline followed by gradual tapering.}
