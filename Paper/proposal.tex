@@ -6,7 +6,7 @@
 
 
 % ready for submission
-\usepackage[preprint]{neurips_2024}
+\usepackage{neurips_2024}
 
 
 % to compile a preprint version, e.g., for submission to arXiv, add add the
@@ -47,7 +47,7 @@
 \titlespacing*{\section}{0pt}{0.6ex}{0.3ex}
 \titlespacing*{\subsection}{0pt}{0.4ex}{0.2ex}
 
-% Reduce title and author spacing
+% Reduce title and author spacing (keeping compact format but showing authors)
 \makeatletter
 \renewcommand{\@toptitlebar}{%
   \hrule height 2\p@
@@ -69,24 +69,15 @@
     \centering
     {\Large\bf \@title\par}
     \@bottomtitlebar
-    \if@submission
-      \begin{tabular}[t]{c}\bf\rule{\z@}{16\p@}
-        Anonymous Author(s) \\
-        Affiliation \\
-        Address \\
-        \texttt{email} \\
-      \end{tabular}%
-    \else
-      \def\And{%
-        \end{tabular}\hfil\linebreak[0]\hfil%
-        \begin{tabular}[t]{c}\bf\rule{\z@}{16\p@}\ignorespaces%
-      }
-      \def\AND{%
-        \end{tabular}\hfil\linebreak[4]\hfil%
-        \begin{tabular}[t]{c}\bf\rule{\z@}{16\p@}\ignorespaces%
-      }
-      \begin{tabular}[t]{c}\bf\rule{\z@}{16\p@}\@author\end{tabular}%
-    \fi
+    \def\And{%
+      \end{tabular}\hfil\linebreak[0]\hfil%
+      \begin{tabular}[t]{c}\bf\rule{\z@}{16\p@}\ignorespaces%
+    }
+    \def\AND{%
+      \end{tabular}\hfil\linebreak[4]\hfil%
+      \begin{tabular}[t]{c}\bf\rule{\z@}{16\p@}\ignorespaces%
+    }
+    \begin{tabular}[t]{c}\bf\rule{\z@}{16\p@}\@author\end{tabular}%
     \vskip 0.15in \@minus 0.05in
   }
 }
