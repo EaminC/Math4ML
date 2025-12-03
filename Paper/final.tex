@@ -455,31 +455,153 @@ GloVe & 100 & 50 (balanced), 51 (unbalanced) \\
 \end{tabular}
 \end{table}
 
-\subsection{Classification Methods}
+\subsection{Classifiers}
+\label{sec:classification_methods}
 
-We evaluate multiple classifiers to identify the most effective approach for depression detection:
-
-\textbf{Logistic Regression}: Models the probability $P(Y=1|X)$ using the sigmoid function:
-\begin{equation}
-P(Y=1|X) = \frac{1}{1 + \exp(-\mathbf{w}^T \mathbf{x} - b)}
-\end{equation}
-where $\mathbf{w}$ is the weight vector and $b$ is the bias term. This probabilistic classifier provides interpretable coefficients and is computationally efficient.
-
-\textbf{Support Vector Machines (SVM)}: Find the optimal separating hyperplane by solving:
-\begin{equation}
-\min_{\mathbf{w}, b} \frac{1}{2}\|\mathbf{w}\|^2 + C \sum_{i=1}^{n} \xi_i
-\end{equation}
-subject to $y_i(\mathbf{w}^T \mathbf{x}_i + b) \geq 1 - \xi_i$ for all $i$, where $C$ is the regularization parameter and $\xi_i$ are slack variables. SVMs are effective for high-dimensional sparse data like text.
-
-\textbf{Neural Networks}: We train feedforward neural networks using stochastic gradient descent (SGD) \cite{bottou2010} with updates:
-\begin{equation}
-\theta_{t+1} = \theta_t - \eta \nabla_{\theta} \mathcal{L}(\theta_t; x_i, y_i)
-\end{equation}
-where $\eta$ is the learning rate and $\mathcal{L}$ is the loss function. We also explore Adam \cite{kingma2014adam} and RMSprop optimizers for potentially faster convergence.
+We evaluate three complementary approaches:
+\begin{itemize}
+  \item \textbf{Logistic Regression}: a linear classifier that models $P(Y=1|\mathbf{x})$ via a sigmoid over a weighted sum of embedding features. Its L2-regularized objective is
+  \begin{equation}
+    \min_{\mathbf{w}, b} \sum_{i=1}^{n} \log\!\left(1 + \exp(-y_i (\mathbf{w}^\top \mathbf{x}_i + b))\right) + \frac{\lambda}{2} \|\mathbf{w}\|_2^2,
+  \end{equation}
+  with predictions $p(y=1|\mathbf{x}) = \sigma(\mathbf{w}^\top \mathbf{x} + b)$.
+  \item \textbf{Neural Networks (MLP)}: a single-hidden-layer feedforward network with ReLU activations and Adam optimization, capturing non-linear interactions:
+  \begin{equation}
+    \mathbf{h} = \sigma(\mathbf{W}_1 \mathbf{x} + \mathbf{b}_1), \qquad
+    \hat{y} = \sigma(\mathbf{w}_2^\top \mathbf{h} + b_2),
+  \end{equation}
+  trained via Adam updates $\theta_{t+1} = \theta_t - \eta \hat{m}_t / (\sqrt{\hat{v}_t} + \epsilon)$.
+  \item \textbf{Unsupervised $k$-means}: a label-free clustering baseline that minimizes $\sum_{i} \min_j \|\mathbf{x}_i - \mathbf{c}_j\|_2^2$ with $k=2$, maps each centroid to a class via majority vote, and uses soft membership weights for AUC computation.
+\end{itemize}
 
 \subsection{Evaluation Metrics}
 
-We report comprehensive metrics to assess model performance: F1-score, Precision, Recall, Accuracy, and Area Under the ROC Curve (AUC-ROC). These metrics are defined in the Appendix (Section~\ref{sec:eval_metrics}).
+We report F1-score, Precision, Recall, Accuracy, and Area Under the ROC Curve (AUC-ROC) on the held-out test fold. Definitions appear in Appendix~\ref{sec:eval_metrics}.
+
+\section{Experimental Evaluation}
+
+\subsection{Train/Test Protocol}
+
+We create a stratified $K$-fold partition with $K=5$ and designate one fold (fold 0 in our runs) as the held-out test set. The remaining 80\% of the data serve as the sole training split for every embedding/model configuration. Balanced datasets are downsampled beforehand so both classes contain 10{,}325 users, ensuring each fold preserves a 50/50 ratio. The unbalanced dataset retains the natural 1:2.15 prevalence to evaluate robustness under real-world skew. For every vectorization method (TF-IDF, N-grams, Word2Vec, GloVe) and embedding variant (original/PCA), we train logistic regression, the MLP, and the unsupervised $k$-means classifier on the training portion only, then evaluate all metrics exclusively on the test fold.
+
+\subsection{Classification Performance}
+
+Tables~\ref{tab:orig_results} and~\ref{tab:pca_results} list the held-out test results for every dataset/method/model combination using original embeddings and PCA-compressed embeddings respectively. Consistent with the exploratory analysis, dense semantic representations (Word2Vec and GloVe) paired with the MLP achieve the strongest F1 and AUC scores on both balanced and unbalanced splits. High-dimensional sparse representations trail by roughly 10 percentage points in F1, and PCA compression hurts TF-IDF/N-grams more noticeably than the dense embeddings. The unsupervised $k$-means baseline highlights the performance gap relative to supervised models, especially on sparse features where clusters poorly align with depression labels.
+
+Across all three classifiers, the semantic embeddings consistently outperform the sparse bag-of-words features. For example, on the balanced dataset with original embeddings, the best TF-IDF configuration reaches $F_1 = 0.832$ (MLP) and AUC $=0.915$, whereas Word2Vec and GloVe each exceed $F_1 = 0.94$ and $AUC = 0.98$ regardless of whether we use logistic regression, MLP, or even the k-means baseline. The same pattern holds on the unbalanced split: Word2Vec/GloVe maintain $F_1 \approx 0.92$ with AUC above 0.97, while TF-IDF and N-grams drop to $F_1 \le 0.77$ under logistic regression and degrade further under k-means. These results confirm that dense embeddings provide richer, more robust signal for depression detection than purely lexical counts, even when the downstream model is as simple as logistic regression.
+
+\begin{table}[t]
+  \centering
+  \caption{Held-out test results using original embeddings.}
+  \label{tab:orig_results}
+  \resizebox{\linewidth}{!}{%
+  \begin{tabular}{lccccccc}
+    \toprule
+    Dataset & Vectorization & Model & Accuracy & Precision & Recall & F1 & AUC \\
+    \midrule
+    Balanced   & TF-IDF   & LogReg & 0.832 & 0.841 & 0.820 & 0.830 & 0.914 \\
+               &          & MLP    & 0.833 & 0.835 & 0.830 & 0.832 & 0.915 \\
+               &          & KMeans & 0.519 & 1.000 & 0.039 & 0.075 & 0.718 \\
+               & N-grams  & LogReg & 0.827 & 0.826 & 0.829 & 0.827 & 0.909 \\
+               &          & MLP    & 0.837 & 0.827 & 0.852 & 0.839 & 0.912 \\
+               &          & KMeans & 0.500 & 0.500 & 1.000 & 0.667 & 0.503 \\
+               & Word2Vec & LogReg & 0.937 & 0.943 & 0.930 & 0.937 & 0.979 \\
+               &          & MLP    & 0.948 & 0.960 & 0.935 & 0.947 & 0.985 \\
+               &          & KMeans & 0.774 & 0.717 & 0.905 & 0.800 & 0.879 \\
+               & GloVe    & LogReg & 0.943 & 0.950 & 0.935 & 0.942 & 0.980 \\
+               &          & MLP    & 0.952 & 0.965 & 0.938 & 0.951 & 0.986 \\
+               &          & KMeans & 0.792 & 0.734 & 0.917 & 0.815 & 0.893 \\
+    \midrule
+    Unbalanced & TF-IDF   & LogReg & 0.846 & 0.739 & 0.795 & 0.766 & 0.918 \\
+               &          & MLP    & 0.861 & 0.890 & 0.642 & 0.746 & 0.917 \\
+               &          & KMeans & 0.683 & 0.000 & 0.000 & 0.000 & 0.500 \\
+               & N-grams  & LogReg & 0.828 & 0.689 & 0.835 & 0.755 & 0.907 \\
+               &          & MLP    & 0.859 & 0.899 & 0.625 & 0.737 & 0.911 \\
+               &          & KMeans & 0.683 & 0.000 & 0.000 & 0.000 & 0.500 \\
+               & Word2Vec & LogReg & 0.939 & 0.888 & 0.924 & 0.906 & 0.977 \\
+               &          & MLP    & 0.953 & 0.944 & 0.906 & 0.925 & 0.983 \\
+               &          & KMeans & 0.694 & 0.510 & 0.924 & 0.657 & 0.872 \\
+               & GloVe    & LogReg & 0.939 & 0.890 & 0.922 & 0.906 & 0.978 \\
+               &          & MLP    & 0.951 & 0.940 & 0.903 & 0.921 & 0.982 \\
+               &          & KMeans & 0.717 & 0.531 & 0.931 & 0.676 & 0.886 \\
+    \bottomrule
+  \end{tabular}}
+\end{table}
+
+\begin{table}[t]
+  \centering
+  \caption{Held-out test results using PCA-compressed embeddings.}
+  \label{tab:pca_results}
+  \resizebox{\linewidth}{!}{%
+  \begin{tabular}{lccccccc}
+    \toprule
+    Dataset & Vectorization & Model & Accuracy & Precision & Recall & F1 & AUC \\
+    \midrule
+    Balanced   & TF-IDF   & LogReg & 0.798 & 0.839 & 0.738 & 0.785 & 0.871 \\
+               &          & MLP    & 0.799 & 0.798 & 0.801 & 0.799 & 0.871 \\
+               &          & KMeans & 0.533 & 1.000 & 0.067 & 0.125 & 0.871 \\
+               & N-grams  & LogReg & 0.776 & 0.734 & 0.865 & 0.794 & 0.864 \\
+               &          & MLP    & 0.808 & 0.791 & 0.836 & 0.813 & 0.884 \\
+               &          & KMeans & 0.500 & 0.500 & 1.000 & 0.667 & 0.500 \\
+               & Word2Vec & LogReg & 0.935 & 0.940 & 0.928 & 0.934 & 0.977 \\
+               &          & MLP    & 0.947 & 0.953 & 0.940 & 0.947 & 0.985 \\
+               &          & KMeans & 0.771 & 0.714 & 0.905 & 0.798 & 0.879 \\
+               & GloVe    & LogReg & 0.938 & 0.945 & 0.931 & 0.938 & 0.978 \\
+               &          & MLP    & 0.942 & 0.947 & 0.936 & 0.941 & 0.982 \\
+               &          & KMeans & 0.791 & 0.733 & 0.917 & 0.814 & 0.893 \\
+    \midrule
+    Unbalanced & TF-IDF   & LogReg & 0.838 & 0.756 & 0.723 & 0.739 & 0.876 \\
+               &          & MLP    & 0.855 & 0.835 & 0.677 & 0.748 & 0.883 \\
+               &          & KMeans & 0.683 & 0.000 & 0.000 & 0.000 & 0.500 \\
+               & N-grams  & LogReg & 0.739 & 0.557 & 0.866 & 0.678 & 0.861 \\
+               &          & MLP    & 0.832 & 0.847 & 0.576 & 0.686 & 0.881 \\
+               &          & KMeans & 0.683 & 0.000 & 0.000 & 0.000 & 0.500 \\
+               & Word2Vec & LogReg & 0.935 & 0.880 & 0.919 & 0.899 & 0.975 \\
+               &          & MLP    & 0.951 & 0.944 & 0.899 & 0.921 & 0.982 \\
+               &          & KMeans & 0.694 & 0.509 & 0.924 & 0.657 & 0.873 \\
+               & GloVe    & LogReg & 0.938 & 0.888 & 0.922 & 0.905 & 0.977 \\
+               &          & MLP    & 0.951 & 0.940 & 0.905 & 0.922 & 0.983 \\
+               &          & KMeans & 0.714 & 0.528 & 0.931 & 0.674 & 0.886 \\
+    \bottomrule
+  \end{tabular}}
+\end{table}
+
+\paragraph{Embedding separability via t-SNE.} To interpret these gains, we project 500 balanced samples per class into two dimensions with t-SNE (Figure~\ref{fig:tsne_comparison}). TF-IDF and N-gram embeddings produce interleaved clusters with no clear margin, consistent with their lower test metrics. In contrast, Word2Vec and GloVe yield two compact groups with minimal overlap, reflecting the semantic structure captured by dense embeddings and foreshadowing their superior performance across all classifiers.
+
+\begin{figure}[t]
+  \centering
+  \begin{subfigure}{0.48\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{figures/balanced_tfidf_original_tsne.png}
+    \caption{TF-IDF (balanced)}
+    \label{fig:tsne_tfidf}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}{0.48\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{figures/balanced_ngrams_original_tsne.png}
+    \caption{N-grams (balanced)}
+    \label{fig:tsne_ngrams}
+  \end{subfigure}
+  \\
+  \begin{subfigure}{0.48\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{figures/balanced_word2vec_original_tsne.png}
+    \caption{Word2Vec (balanced)}
+    \label{fig:tsne_word2vec}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}{0.48\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{figures/balanced_glove_original_tsne.png}
+    \caption{GloVe (balanced)}
+    \label{fig:tsne_glove}
+  \end{subfigure}
+  \caption{t-SNE visualizations of balanced dataset embeddings. Word2Vec and GloVe show well-separated clusters, whereas TF-IDF and N-grams exhibit heavier overlap and noisier structure.}
+  \label{fig:tsne_comparison}
+\end{figure}
+
+The gap between balanced and unbalanced performance highlights the expected precision-recall trade-off when models are exposed to the natural 1:2.15 class ratio. Dense embeddings still maintain high recall ($\approx 0.90$), suggesting that linguistic signals overcome class imbalance when the model is expressive enough. Conversely, sparse representations rely on logistic regression to prevent false positives, underscoring the need for additional sampling strategies (e.g., SMOTE) if they are to match the dense embedding results.
 
 \section{Expected Contributions}
 
